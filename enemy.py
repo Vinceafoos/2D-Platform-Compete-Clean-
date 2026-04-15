@@ -1,3 +1,7 @@
 from raylib import *
 from pyray import *
 from anim import *
+
+class Enemy:
+    def __init__(self):
+        self.position = Vector2(0,0)
