@@ -1,8 +1,6 @@
 from raylib import *
 from pyray import *
-
-SPRITE_FRAME_WIDTH = 460
-SPRITE_FRAME_HEIGHT = 600
+from settings import *
 
 class AnimationType():
     REPEATING = 1
