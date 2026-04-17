@@ -20,15 +20,16 @@ The player controls a WADA agent navigating through three levels, attempting to 
 ### Theme Interpretation
 
 #### Action Codes
-The game begins with a question regarding the integrity of an athlete, the player is not explicitly told the person you're after is cheating, instead it is something you must uncover. This uncertainty frames some of the experience. There is a bit of mystery, and to solve it the player must collect evidence scattered across increasingly difficult levels. Each collected item partially answers the mystery, but never fully resolves it until the end. 
-
-#### Enigma Codes
 The narrative unfolds through different gameplay actions, which serve as the primary storytelling device:
 - Navigating hazards (javelin throwers, spike traps, sand pits)
 - Performing precise and high jumps
 - Racing against a time limit to gather evidence
+All of these actions help drive the story of the game on. 
 
 Each obstacle represents resistance, not all realistic to the world, but still symbolic of the difficulty when uncovering truth in a system that is known to resist exposure. As the player progresses through levels, the intensity increases, creating narrative escalation.
+
+#### Enigma Codes
+The game begins with a question regarding the integrity of an athlete, the player is not explicitly told the person you're after is cheating, instead it is something you must uncover. This uncertainty frames some of the experience. There is a bit of mystery, and to solve it the player must collect evidence scattered across increasingly difficult levels. Each collected item gets you closer to answering the mystery, but never fully resolves it until the end. 
 
 #### Look and Feel
 Visually, Compete Clean uses a retro, pixel art style, forming a light and approachable tone, which we then contrast with the serious underlying theme of doping and corruption. The player should be visually pleased as they navigate levels and collect evidence, but have a sense of importance as their performance has an impact in serving justice.
@@ -42,7 +43,7 @@ Visually, Compete Clean uses a retro, pixel art style, forming a light and appro
 |---|---|---|
 | Movement | The player can traverse the level by moving left and right. | ![walking](md_assets/walking.png) |
 | Jump | By pressing space the player can jump over obstacles, or onto higher surfaces. | ![jumping](md_assets/jump.png) |
-| High Jump | By holding down the jump key, the player can charge their jump to reach higher locations.  | ![charging](md_assets/charge_jump.png) |
+| High Jump | By holding down the down key, the player can charge their jump to reach higher locations.  | ![charging](md_assets/charge_jump.png) |
 | Healing | If the player finds a medkit, they can use it to recover any lost health. | ![medkit](md_assets/medkit.png) |
 
 ### Secondary Mechanics
