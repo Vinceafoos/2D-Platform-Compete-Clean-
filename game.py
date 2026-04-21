@@ -33,12 +33,18 @@ class Game:
                     
         return new_level
         """
-    def update(self):
-        self.player.update()
+    
+    def startup(self):
+        self.camera.target = Vector2(self.player.position.x + PLAYER_SIZE/2, 50)
+        self.camera.offset = Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        self.camera.zoom = 1.0
+        
 
+    def update(self):
+
+        self.player.update()
         self.camera.target.x = self.player.position.x + PLAYER_SIZE/2
         self.camera.target.y = self.player.position.y + PLAYER_SIZE/2
-
 
     def draw_level(self, level):
         """Draws the solid tiles of the level map."""

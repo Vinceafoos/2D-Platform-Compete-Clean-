@@ -58,14 +58,12 @@ class Player():
             if self.grounded:
                 self.transition(State.IDLE)
 
-        
-
         self.velocity.x = motion * MOVE_SPEED
         self.position.x += self.velocity.x*frame_time
 
         self.bounding_box.x = self.position.x
         
-        self.handle_tile_collision(LEVEL1, 'X')
+        #self.handle_tile_collision(LEVEL1, 'X')
 
         if self.grounded and is_key_pressed(KeyboardKey.KEY_SPACE):
             self.transition(State.JUMP)
@@ -98,7 +96,6 @@ class Player():
         if (self.player_frame.width < 0 and self.player_direction > 0) or (self.player_frame.width > 0 and self.player_direction < 0):
             self.player_frame.width *= -1
 
-        
 
     def handle_tile_collision(self, level, axis):
         """Performs AABB collision checks against solid tiles and resolves the collision."""
@@ -106,7 +103,6 @@ class Player():
         py = self.bounding_box.y
         pw = PLAYER_SIZE
         ph = PLAYER_SIZE
-
 
         min_col = int(px / TILE_SIZE)
         max_col = int((px + pw) / TILE_SIZE)
@@ -123,27 +119,26 @@ class Player():
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
                     if check_collision_recs(self.bounding_box, tile_rect):
-                        
+
                         if axis == 'X':
                             if self.velocity.x > 0: # Moving Right
                                 self.position.x = tile_rect[0] - PLAYER_SIZE
+                                self.velocity.x = 0.0
+
                             elif self.velocity.x < 0: # Moving Left
                                 self.position.x = tile_rect[0] + TILE_SIZE
-                            self.velocity.x = 0.0 
-                            
+                                self.velocity.x = 0.0
+
                         elif axis == 'Y':
-                            if self.velocity.y >= 0: # Falling (Hitting Ground)
-                                self.position.y = tile_rect[1] - PLAYER_SIZE
-                                self.grounded = True 
-                            elif self.velocity.y < 0: # Jumping (Hitting Ceiling)
-                                self.position.y = tile_rect[1] + TILE_SIZE
-                                
-                            self.velocity.y = 0.0 
-                            
-                        #player_rect = self.get_rect()
-                        #px, py, pw, ph = player_rect
-                        #self.bounding_box = (self.position.x,self.position.y,PLAYER_SIZE,PLAYER_SIZE)
-                        
+                            if self.velocity.y != 0:
+                                if self.velocity.y > 0.0: # Falling (Hitting Ground)
+                                    self.position.y = tile_rect[1] - PLAYER_SIZE
+                                    self.grounded = True 
+                                    self.velocity.y = 0.0 
+
+                                elif self.velocity.y < 0.0: # Jumping (Hitting Ceiling)
+                                    self.position.y = tile_rect[1] + TILE_SIZE
+                                    self.velocity.y = 0.0 
 
     def draw(self):
         draw_texture_pro(
