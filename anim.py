@@ -23,7 +23,7 @@ class Animation:
         self.row = row
         self.sprites_in_row = sprites_in_row 
         self.done = False
-        self.frame_rec = Rectangle(0,0,SPRITE_FRAME_WIDTH, SPRITE_FRAME_HEIGHT)
+        self.frame_rec = Rectangle(0,0,SPRITE_SHEET_TILE_SIZE, SPRITE_SHEET_TILE_SIZE)
 
     def update(self, dt):
         self.duration_left -= dt
@@ -39,8 +39,8 @@ class Animation:
                         self.cur = self.first 
 
     def frame(self):
-        self.frame_rec.x = (self.cur % self.sprites_in_row) * SPRITE_FRAME_WIDTH
-        self.frame_rec.y =  SPRITE_FRAME_HEIGHT * self.row
+        self.frame_rec.x = (self.cur % self.sprites_in_row) * SPRITE_SHEET_TILE_SIZE
+        self.frame_rec.y =  SPRITE_SHEET_TILE_SIZE * self.row
         return self.frame_rec
 
     def reset(self): 
