@@ -68,6 +68,10 @@ class Game:
     def update(self):
         self.item_player_collision()
         self.player.update()
+        self.update_camera()
+        
+
+    def update_camera(self):
         self.camera.target.x = self.player.position.x + PLAYER_SIZE/2
         self.camera.target.y = self.player.position.y + PLAYER_SIZE/2
         min_x = SCREEN_WIDTH / 2
@@ -88,7 +92,6 @@ class Game:
         
         self.camera.offset.x = SCREEN_WIDTH / 2
         self.camera.offset.y = SCREEN_HEIGHT / 2
-        
 
     def draw_level(self, level):
         """Draws the solid tiles of the level map."""
@@ -104,6 +107,3 @@ class Game:
     
     def draw(self, level):
         self.player.draw()
-        self.weight.draw()
-        self.blood.draw()
-        self.draw_level(level)
