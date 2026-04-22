@@ -3,13 +3,16 @@ from pyray import *
 from anim import *
 from player import *
 from enemy import *
+from weight import *
+from blood import *
 
 class Game:
     def __init__(self):
         self.player = Player()
         self.enemy = Enemy()
         self.camera = Camera2D()
-        self.startup()
+        self.weight = Weight(0,0)
+        self.blood = Blood(0,0)
 
     """
     def parse_level(level):
@@ -35,15 +38,35 @@ class Game:
         return new_level
         """
     
-    def startup(self):
+    def startup(self, level):
         self.camera.target = Vector2(self.player.position.x, self.player.position.y)
         self.camera.offset = Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
         self.camera.rotation = 0.0
         self.camera.zoom = 1.0
+        for row in range(TILE_ROWS):
+            for col in range(TILE_COLS):
+                tile_value = level[row][col]
+                if tile_value == TILE_WEIGHT:
+                    x = col * TILE_SIZE
+                    y = row * TILE_SIZE
+                    self.weight.arr.append(Weight(int(x + 0.5 * TILE_SIZE), int(y + 0.5 * TILE_SIZE)))
+                if tile_value == TILE_BLOOD:
+                    x = col * TILE_SIZE
+                    y = row * TILE_SIZE
+                    self.blood.arr.append(Blood(int(x + 0.5 * TILE_SIZE), int(y + 0.5 * TILE_SIZE)))
+
+
+    def item_player_collision(self):
+        for item in self.weight.arr:
+            if check_collision_circle_rec(Vector2(item.position.x,item.position.y), item.radius, self.player.bounding_box):
+                item.active = False
+        for item in self.blood.arr:
+            if check_collision_circle_rec(Vector2(item.position.x,item.position.y), item.radius, self.player.bounding_box):
+                item.active = False
         
 
     def update(self):
-
+        self.item_player_collision()
         self.player.update()
         self.camera.target.x = self.player.position.x + PLAYER_SIZE/2
         self.camera.target.y = self.player.position.y + PLAYER_SIZE/2
@@ -79,5 +102,8 @@ class Game:
                     draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
                     draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
     
-    def draw(self):
+    def draw(self, level):
         self.player.draw()
+        self.weight.draw()
+        self.blood.draw()
+        self.draw_level(level)
