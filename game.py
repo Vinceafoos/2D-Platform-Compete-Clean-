@@ -9,6 +9,7 @@ class Game:
         self.player = Player()
         self.enemy = Enemy()
         self.camera = Camera2D()
+        self.startup()
 
     """
     def parse_level(level):
@@ -35,8 +36,9 @@ class Game:
         """
     
     def startup(self):
-        self.camera.target = Vector2(self.player.position.x + PLAYER_SIZE/2, 50)
+        self.camera.target = Vector2(self.player.position.x, self.player.position.y)
         self.camera.offset = Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        self.camera.rotation = 0.0
         self.camera.zoom = 1.0
         
 
@@ -45,6 +47,25 @@ class Game:
         self.player.update()
         self.camera.target.x = self.player.position.x + PLAYER_SIZE/2
         self.camera.target.y = self.player.position.y + PLAYER_SIZE/2
+        min_x = SCREEN_WIDTH / 2
+        max_x = WORLD_WIDTH - SCREEN_WIDTH / 2
+        
+        if self.camera.target.x < min_x:
+            self.camera.target.x = min_x
+        if self.camera.target.x > max_x:
+            self.camera.target.x = max_x
+
+        min_y = SCREEN_HEIGHT / 2
+        max_y = WORLD_HEIGHT - SCREEN_HEIGHT / 2
+        
+        if self.camera.target.y < min_y:
+            self.camera.target.y = min_y
+        if self.camera.target.y > max_y:
+            self.camera.target.y = max_y
+        
+        self.camera.offset.x = SCREEN_WIDTH / 2
+        self.camera.offset.y = SCREEN_HEIGHT / 2
+        
 
     def draw_level(self, level):
         """Draws the solid tiles of the level map."""

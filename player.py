@@ -12,6 +12,7 @@ class Player():
         self.position = Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT)
         self.velocity = Vector2(0, 0)
         self.grounded = True
+        self.can_double_jump = True
         self.gravity = 2000
         self.jump_vel = -900
         self.state = Animation(
@@ -22,7 +23,11 @@ class Player():
         self.player_texture = load_texture(SHEET)
         self.player_frame = self.state.frame()
         self.player_direction = Direction.RIGHT
-        self.bounding_box = Rectangle(self.position.x,self.position.y, PLAYER_SIZE, PLAYER_SIZE)
+        #self.bounding_box = Rectangle(self.position.x,self.position.y, PLAYER_SIZE, PLAYER_SIZE)
+
+    def get_rect(self):
+        """Returns the player's collision bounding box (top-left, width, height)."""
+        return (self.position.x, self.position.y, PLAYER_SIZE, PLAYER_SIZE)
 
     def transition(self, state):
         if state == self.state.row:
@@ -61,9 +66,8 @@ class Player():
         self.velocity.x = motion * MOVE_SPEED
         self.position.x += self.velocity.x*frame_time
 
-        self.bounding_box.x = self.position.x
+        self.handle_tile_collision(LEVEL1, 'X')
         
-        #self.handle_tile_collision(LEVEL1, 'X')
 
         if self.grounded and is_key_pressed(KeyboardKey.KEY_SPACE):
             self.transition(State.JUMP)
@@ -71,7 +75,7 @@ class Player():
             self.grounded = False
         self.velocity.y += self.gravity * frame_time
         self.position.y += self.velocity.y * frame_time
-        self.bounding_box.y = self.position.y
+        #self.bounding_box.y = self.position.y
 
         self.handle_tile_collision(LEVEL1, 'Y')
 
@@ -98,12 +102,10 @@ class Player():
 
 
     def handle_tile_collision(self, level, axis):
-        """Performs AABB collision checks against solid tiles and resolves the collision."""
-        px = self.bounding_box.x
-        py = self.bounding_box.y
-        pw = PLAYER_SIZE
-        ph = PLAYER_SIZE
-
+        """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
+        enemy_rect = self.get_rect()
+        px, py, pw, ph = enemy_rect
+        
         min_col = int(px / TILE_SIZE)
         max_col = int((px + pw) / TILE_SIZE)
         min_row = int(py / TILE_SIZE)
@@ -118,27 +120,27 @@ class Player():
                 if level[row][col] == TILE_SOLID:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
-                    if check_collision_recs(self.bounding_box, tile_rect):
-
+                    if CheckCollisionRecs(enemy_rect, tile_rect):
+                        
                         if axis == 'X':
-                            if self.velocity.x > 0: # Moving Right
+                            # Reverses direction on horizontal collision
+                            if self.velocity.x > 0:
                                 self.position.x = tile_rect[0] - PLAYER_SIZE
-                                self.velocity.x = 0.0
-
-                            elif self.velocity.x < 0: # Moving Left
+                            elif self.velocity.x < 0:
                                 self.position.x = tile_rect[0] + TILE_SIZE
-                                self.velocity.x = 0.0
+                            #self.velocity.x *= -1 # Reverse direction
 
                         elif axis == 'Y':
-                            if self.velocity.y != 0:
-                                if self.velocity.y > 0.0: # Falling (Hitting Ground)
-                                    self.position.y = tile_rect[1] - PLAYER_SIZE
-                                    self.grounded = True 
-                                    self.velocity.y = 0.0 
+                            if self.velocity.y > 0.0: # Falling (Hitting Ground)
+                                self.position.y = tile_rect[1] - PLAYER_SIZE
+                                self.grounded = True 
+                                self.velocity.y = 0.0 
 
-                                elif self.velocity.y < 0.0: # Jumping (Hitting Ceiling)
-                                    self.position.y = tile_rect[1] + TILE_SIZE
-                                    self.velocity.y = 0.0 
+                            elif self.velocity.y < 0.0: # Jumping (Hitting Ceiling)
+                                self.position.y = tile_rect[1] + TILE_SIZE
+                                self.velocity.y = 0.0 
+                            
+                        enemy_rect = self.get_rect() # Update rect after resolution
 
     def draw(self):
         draw_texture_pro(
@@ -147,4 +149,4 @@ class Player():
             Rectangle(self.position.x , self.position.y, PLAYER_SIZE , PLAYER_SIZE),
             Vector2(0, 0), 0.0, WHITE,
         )
-        draw_rectangle_lines(int(self.bounding_box.x), int(self.bounding_box.y), PLAYER_SIZE, PLAYER_SIZE, RED)
+        draw_rectangle_lines(int(self.position.x), int(self.position.y), PLAYER_SIZE, PLAYER_SIZE, RED)
