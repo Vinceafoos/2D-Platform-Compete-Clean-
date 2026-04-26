@@ -9,7 +9,7 @@ from blood import *
 class Game:
     def __init__(self):
         self.player = Player()
-        self.enemy = Enemy()
+        self.enemy = Enemy(Vector2(0,0))
         self.camera = Camera2D()
         self.weight = Weight(0,0)
         self.blood = Blood(0,0)
@@ -105,5 +105,6 @@ class Game:
                     draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
                     draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
     
-    def draw(self, level):
+    def draw(self):
         self.player.draw()
+        self.draw_level(LEVEL1)

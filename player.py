@@ -3,9 +3,10 @@ from settings import *
 from anim import *
 
 class State:
-    IDLE = 5
+    IDLE = 0
     RUNNING = 1
-    JUMP = 9
+    JUMP = 2
+    CHARGE = 4
 
 class Player():
     def __init__(self):
@@ -36,12 +37,23 @@ class Player():
             case State.IDLE:
                 self.state.row = State.IDLE
                 self.state.sprites_in_row = 4
+                self.state.type = AnimationType.REPEATING
+                self.state.duration = 0.1
             case State.RUNNING:
                 self.state.row = State.RUNNING
-                self.state.sprites_in_row = 6
+                self.state.sprites_in_row = 4
+                self.state.type = AnimationType.REPEATING
+                self.state.duration = 0.1
             case State.JUMP:
                 self.state.row = State.JUMP
-                self.state.sprites_in_row = 3
+                self.state.sprites_in_row = 2
+                self.state.type = AnimationType.ONESHOT
+                self.state.duration = 0.1
+            case State.CHARGE:
+                self.state.row = State.CHARGE
+                self.state.sprites_in_row = 4
+                self.state.type = AnimationType.ONESHOT
+                self.state.duration = 0.5
         self.state.last = self.state.sprites_in_row - 1
 
     def update(self):
@@ -75,6 +87,7 @@ class Player():
             self.grounded = False
 
         if is_key_down(KEY_DOWN) and self.grounded:
+            self.transition(State.CHARGE)
             if self.jump_vel > -1000:
                 self.jump_vel -= 2
             else:

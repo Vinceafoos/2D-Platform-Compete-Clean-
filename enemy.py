@@ -5,7 +5,7 @@ from settings import *
 
 class Enemy:
     def __init__(self, position):
-        self.position = Vector2(0,0)
+        self.position = position
         self.width = TILE_SIZE
         self.height = TILE_SIZE
 

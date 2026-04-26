@@ -13,11 +13,12 @@ PLAYER_WIDTH = TILE_SIZE*.8
 PLAYER_HEIGHT = TILE_SIZE*.9
 
 MOVE_SPEED = 200
-SPRITE_SHEET_TILE_SIZE = 16
+SPRITE_SHEET_TILE_WIDTH = 160
+SPRITE_SHEET_TILE_HEIGHT = 190
 PLAYER_SIZE = 40
 
 THIS_DIR = Path(__file__).resolve().parent
-SHEET = str(THIS_DIR/"hero-sheet.png")
+SHEET = str(THIS_DIR/"wada_spritesheet.png")
 
 
 # --- Tilemap Definitions ---
@@ -28,10 +29,6 @@ TILE_ENEMY = 3
 TILE_SPIKE = 4
 TILE_SAND = 5
 TILE_BLOOD = 6
-
-
-SPRITE_FRAME_WIDTH = 460
-SPRITE_FRAME_HEIGHT = 600
 
 # --- Expanded Level Tilemap Definition (50x16 tiles = 2000px wide) ---
 LEVEL2 = [
