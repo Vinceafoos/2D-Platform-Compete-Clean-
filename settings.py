@@ -19,6 +19,8 @@ PLAYER_SIZE = 40
 
 THIS_DIR = Path(__file__).resolve().parent
 SHEET = str(THIS_DIR/"wada_spritesheet.png")
+BLOOD_SPRITE = str(THIS_DIR/"blood_bag.png")
+
 
 
 # --- Tilemap Definitions ---

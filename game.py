@@ -53,7 +53,7 @@ class Game:
                 if tile_value == TILE_BLOOD:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
-                    self.blood.arr.append(Blood(int(x + 0.5 * TILE_SIZE), int(y + 0.5 * TILE_SIZE)))
+                    self.blood.arr.append(Blood(int(x + 5), int(y + 5)))
 
 
     def item_player_collision(self):
@@ -108,3 +108,5 @@ class Game:
     def draw(self):
         self.player.draw()
         self.draw_level(LEVEL1)
+        self.blood.draw()
+        self.weight.draw()

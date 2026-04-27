@@ -93,10 +93,6 @@ class Player():
             else:
                 print("jump maxed")
 
-    #for tuesday mini presentation:
-    #something you can share that would be useful to others
-    #one struggle you are having
-
         if is_key_released(KEY_DOWN) and self.grounded:
             self.transition(State.JUMP)
             self.grounded = False
