@@ -25,6 +25,7 @@ class Player():
         self.player_direction = Direction.RIGHT
         self.bounding_box = Rectangle(self.position.x,self.position.y, PLAYER_SIZE, PLAYER_SIZE)
         self.strength = 0
+        self.health = 3
 
     def get_rect(self):
         """Returns the player's collision bounding box (top-left, width, height)."""
@@ -81,23 +82,24 @@ class Player():
 
         self.handle_tile_collision(LEVEL1, 'X')
 
-
         if self.grounded and is_key_pressed(KeyboardKey.KEY_UP):
             self.transition(State.JUMP)
             self.velocity.y = self.jump_vel
             self.grounded = False
 
-        if is_key_down(KEY_DOWN) and self.grounded:
+        if is_key_down(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT):
             self.transition(State.CHARGE)
             if self.jump_vel > -1000 - self.strength:
                 self.jump_vel -= 2
             else:
                 print("jump maxed")
 
-        if is_key_released(KEY_DOWN) and self.grounded:
+        if is_key_released(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT):
             self.transition(State.JUMP)
             self.grounded = False
             self.velocity.y = self.jump_vel
+            self.jump_vel = JUMP_VELOCITY
+        elif is_key_down(KEY_LEFT) or is_key_down(KEY_RIGHT):
             self.jump_vel = JUMP_VELOCITY
 
         self.velocity.y += self.gravity * frame_time
@@ -158,7 +160,7 @@ class Player():
                             #self.velocity.x *= -1 # Reverse direction
 
                         elif axis == 'Y':
-                            if self.velocity.y > 0.0: # Falling (Hitting Ground)
+                            if self.velocity.y >= 0.0: # Falling (Hitting Ground)
                                 self.position.y = tile_rect[1] - PLAYER_SIZE
                                 self.grounded = True 
                                 self.velocity.y = 0.0 

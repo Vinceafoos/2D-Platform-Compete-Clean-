@@ -16,6 +16,7 @@ class Game:
         self.evidence = 0
         self.curr_time = 0
         self.start_time = 0
+        self.debug = False
 
     """
     def parse_level(level):
@@ -75,6 +76,12 @@ class Game:
         self.item_player_collision()
         self.player.update()
         self.update_camera()
+        self.check_debug()
+
+
+    def check_debug(self):
+        if is_key_pressed(KEY_I):
+            self.debug = not self.debug
 
     def update_camera(self):
         self.camera.target.x = self.player.position.x + PLAYER_SIZE/2
@@ -113,15 +120,19 @@ class Game:
     def draw_hud(self):
         draw_rectangle(0,0,TILE_COLS * TILE_SIZE,30, WHITE)
         draw_text(f"Evidence Collected: {self.evidence}", 5,5,20, BLACK)
-        draw_text(f"Strength: {self.player.strength}", 350,5,20, BLACK)
+        draw_text(f"Strength: {self.player.strength}", 280,5,20, BLACK)
+        draw_text(f"Health: {self.player.health}", 470, 5, 20, BLACK)
         draw_text(f"Current Time: {self.curr_time:.2f}", 600,5,20, BLACK)
 
-
+    def draw_debug(self):
+        if self.debug:
+            draw_text(f"Grounded: {self.player.grounded}", 200, 200, 20, PINK)
     
     def draw(self):
         self.player.draw()
         self.draw_level(LEVEL1)
         self.blood.draw()
         self.weight.draw()
+        self.draw_debug()
 
         
