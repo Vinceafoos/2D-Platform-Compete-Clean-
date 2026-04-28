@@ -13,6 +13,9 @@ class Game:
         self.camera = Camera2D()
         self.weight = Weight(0,0)
         self.blood = Blood(0,0)
+        self.evidence = 0
+        self.curr_time = 0
+        self.start_time = 0
 
     """
     def parse_level(level):
@@ -39,6 +42,7 @@ class Game:
         """
     
     def startup(self, level):
+        self.start_time = get_time()
         self.camera.target = Vector2(self.player.position.x, self.player.position.y)
         self.camera.offset = Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
         self.camera.rotation = 0.0
@@ -59,17 +63,18 @@ class Game:
     def item_player_collision(self):
         for item in self.weight.arr:
             if check_collision_circle_rec(Vector2(item.position.x,item.position.y), item.radius, self.player.bounding_box):
+                if item.active: self.player.strength += 50
                 item.active = False
         for item in self.blood.arr:
             if check_collision_circle_rec(Vector2(item.position.x,item.position.y), item.radius, self.player.bounding_box):
+                if item.active: self.evidence += 1
                 item.active = False
         
-
     def update(self):
+        self.curr_time = get_time() - self.start_time
         self.item_player_collision()
         self.player.update()
         self.update_camera()
-        
 
     def update_camera(self):
         self.camera.target.x = self.player.position.x + PLAYER_SIZE/2
@@ -104,9 +109,19 @@ class Game:
                     
                     draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
                     draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
+
+    def draw_hud(self):
+        draw_rectangle(0,0,TILE_COLS * TILE_SIZE,30, WHITE)
+        draw_text(f"Evidence Collected: {self.evidence}", 5,5,20, BLACK)
+        draw_text(f"Strength: {self.player.strength}", 350,5,20, BLACK)
+        draw_text(f"Current Time: {self.curr_time:.2f}", 600,5,20, BLACK)
+
+
     
     def draw(self):
         self.player.draw()
         self.draw_level(LEVEL1)
         self.blood.draw()
         self.weight.draw()
+
+        

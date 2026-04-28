@@ -24,6 +24,7 @@ class Player():
         self.player_frame = self.state.frame()
         self.player_direction = Direction.RIGHT
         self.bounding_box = Rectangle(self.position.x,self.position.y, PLAYER_SIZE, PLAYER_SIZE)
+        self.strength = 0
 
     def get_rect(self):
         """Returns the player's collision bounding box (top-left, width, height)."""
@@ -88,7 +89,7 @@ class Player():
 
         if is_key_down(KEY_DOWN) and self.grounded:
             self.transition(State.CHARGE)
-            if self.jump_vel > -1000:
+            if self.jump_vel > -1000 - self.strength:
                 self.jump_vel -= 2
             else:
                 print("jump maxed")

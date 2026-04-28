@@ -20,6 +20,7 @@ if __name__ == '__main__':
 
     current_game.draw()
     end_mode_2d()
+    current_game.draw_hud()
 
     end_drawing()
 
