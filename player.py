@@ -111,6 +111,8 @@ class Player():
         self.velocity.y += self.gravity * frame_time
         self.position.y += self.velocity.y * frame_time
         self.bounding_box.y = self.position.y
+        if(self.velocity.y > RESTING_VELOCTY):
+            self.grounded = False
 
         self.handle_tile_collision(LEVEL1, 'Y')
 

@@ -11,6 +11,7 @@ PLAYER_SPEED = 300.0    # Player horizontal movement speed
 ENEMY_SPEED = 100.0     # Enemy horizontal movement speed
 PLAYER_WIDTH = TILE_SIZE*.8
 PLAYER_HEIGHT = TILE_SIZE*.9
+RESTING_VELOCTY = 18
 
 MOVE_SPEED = 200
 SPRITE_SHEET_TILE_WIDTH = 170
