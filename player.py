@@ -6,6 +6,7 @@ class State:
     IDLE = 0
     RUNNING = 1
     JUMP = 2
+    HEAL = 3
     CHARGE = 4
 
 class Player():
@@ -19,7 +20,7 @@ class Player():
                     first=0, last=3, cur=0,
                     step=1, duration=0.1, duration_left=0.1,
                     anim_type=AnimationType.REPEATING,
-                    row=5, sprites_in_row=4,)
+                    row=0, sprites_in_row=4,)
         self.player_texture = load_texture(SHEET)
         self.player_frame = self.state.frame()
         self.player_direction = Direction.RIGHT
@@ -51,6 +52,11 @@ class Player():
                 self.state.sprites_in_row = 2
                 self.state.type = AnimationType.ONESHOT
                 self.state.duration = 0.1
+            case State.HEAL:
+                self.state.row = State.HEAL
+                self.state.sprites_in_row = 5
+                self.state.type = AnimationType.ONESHOT
+                self.state.duration = 0.3
             case State.CHARGE:
                 self.state.row = State.CHARGE
                 self.state.sprites_in_row = 4
@@ -113,10 +119,11 @@ class Player():
             self.position.y = bottom_bound
             self.velocity.y = 0
             self.grounded = True
-            if motion != 0:
-                self.transition(State.RUNNING)
-            else:
-                self.transition(State.IDLE)
+            if self.state.row not in (State.CHARGE, State.HEAL):
+                if motion != 0:
+                    self.transition(State.RUNNING)
+                else:
+                    self.transition(State.IDLE)
         """
         if self.pos.x < 0:
             self.pos.x = 0

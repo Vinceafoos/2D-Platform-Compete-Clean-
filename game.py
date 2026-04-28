@@ -54,7 +54,7 @@ class Game:
                 if tile_value == TILE_WEIGHT:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
-                    self.weight.arr.append(Weight(int(x + 0.5 * TILE_SIZE), int(y + 0.5 * TILE_SIZE)))
+                    self.weight.arr.append(Weight(int(x), int(y)))
                 if tile_value == TILE_BLOOD:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
@@ -77,7 +77,7 @@ class Game:
         self.player.update()
         self.update_camera()
         self.check_debug()
-
+        self.weight.update()
 
     def check_debug(self):
         if is_key_pressed(KEY_I):
@@ -129,8 +129,8 @@ class Game:
             draw_text(f"Grounded: {self.player.grounded}", 200, 200, 20, PINK)
     
     def draw(self):
-        self.player.draw()
         self.draw_level(LEVEL1)
+        self.player.draw()
         self.blood.draw()
         self.weight.draw()
         self.draw_debug()

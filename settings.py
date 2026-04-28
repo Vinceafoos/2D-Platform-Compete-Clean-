@@ -20,7 +20,9 @@ PLAYER_SIZE = 40
 THIS_DIR = Path(__file__).resolve().parent
 SHEET = str(THIS_DIR/"wada_spritesheet.png")
 BLOOD_SPRITE = str(THIS_DIR/"blood_bag.png")
-
+WEIGHT_SPRITE = str(THIS_DIR/"weight_sheet.png")
+WEIGHT_SHEET_TILE_WIDTH = 40
+WEIGHT_SHEET_TILE_HEIGHT = 138
 
 
 # --- Tilemap Definitions ---
