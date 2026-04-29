@@ -61,8 +61,8 @@ class Player():
                 self.state.row = State.CHARGE
                 self.state.sprites_in_row = 4
                 self.state.type = AnimationType.ONESHOT
-                self.state.duration = 1
-                self.state.duration_left = 1
+                self.state.duration = .5
+                self.state.duration_left = .5
         self.state.last = self.state.sprites_in_row - 1
 
     def update(self, level):
@@ -158,7 +158,7 @@ class Player():
                 if row < 0 or row >= TILE_ROWS or col < 0 or col >= TILE_COLS:
                     continue
                 
-                if level[row][col] == TILE_SOLID:
+                if level[row][col] >= 10 or level[row][col] == TILE_SOLID:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
                     if check_collision_recs(enemy_rect, tile_rect):
@@ -191,3 +191,7 @@ class Player():
             Vector2(0, 0), 0.0, WHITE,
         )
         draw_rectangle_lines(int(self.position.x), int(self.position.y), PLAYER_SIZE, PLAYER_SIZE, RED)
+
+
+    def shutdown(self):
+        unload_texture(self.player_texture)
