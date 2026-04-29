@@ -39,3 +39,4 @@ class Weight():
                     Rectangle(int(item.position.x), int(item.position.y), TILE_SIZE, TILE_SIZE),
                     Vector2(0,0), 0.0, WHITE
                 )
+                #draw_circle(int(item.position.x + 14), int(item.position.y + 12), self.radius, GRAY)
