@@ -65,7 +65,7 @@ class Player():
                 self.state.duration_left = 1
         self.state.last = self.state.sprites_in_row - 1
 
-    def update(self):
+    def update(self, level):
         frame_time = get_frame_time()
         motion = 0
 
@@ -87,7 +87,7 @@ class Player():
         self.position.x += self.velocity.x*frame_time
         self.bounding_box.x = self.position.x
 
-        self.handle_tile_collision(LEVEL1, 'X')
+        self.handle_tile_collision(level, 'X')
 
         if self.grounded and is_key_pressed(KeyboardKey.KEY_UP):
             self.transition(State.JUMP)
@@ -117,7 +117,7 @@ class Player():
         if(self.velocity.y > RESTING_VELOCTY):
             self.grounded = False
 
-        self.handle_tile_collision(LEVEL1, 'Y')
+        self.handle_tile_collision(level, 'Y')
 
         bottom_bound = SCREEN_HEIGHT - PLAYER_SIZE
         if self.position.y >= bottom_bound:

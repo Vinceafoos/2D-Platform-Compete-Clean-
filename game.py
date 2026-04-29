@@ -6,6 +6,14 @@ from enemy import *
 from weight import *
 from blood import *
 
+class GameStates:
+    SPLASH = 1
+    GAME = 2
+    WIN = 3
+    LOSE = 4
+    INSTRUCTIONS = 5
+    IN_BETWEEN = 6
+
 class Game:
     def __init__(self):
         self.player = Player()
@@ -17,6 +25,9 @@ class Game:
         self.curr_time = 0
         self.start_time = 0
         self.debug = False
+        self.win_tiles = []
+        self.game_state = 6
+        self.curr_level = -1
 
     """
     def parse_level(level):
@@ -59,6 +70,10 @@ class Game:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
                     self.blood.arr.append(Blood(int(x + 5), int(y + 5)))
+                if tile_value == TILE_WIN:
+                    x = col * TILE_SIZE
+                    y = row * TILE_SIZE
+                    self.win_tiles.append(Rectangle(x,y,TILE_SIZE, TILE_SIZE))
 
 
     def item_player_collision(self):
@@ -71,14 +86,33 @@ class Game:
                 if item.active: self.evidence += 1
                 item.active = False
         
-    def update(self):
-        self.curr_time = get_time() - self.start_time
-        self.item_player_collision()
-        self.player.update()
-        self.update_camera()
-        self.check_debug()
-        self.weight.update()
+    def check_win(self):
+        for rec in self.win_tiles:
+            if check_collision_recs(self.player.bounding_box, rec):
+                self.game_state = GameStates.IN_BETWEEN
 
+    def update(self):
+        match self.game_state:
+            case GameStates.GAME:
+                self.curr_time = get_time() - self.start_time
+                self.item_player_collision()
+                self.player.update(LEVELS[self.curr_level])
+                self.update_camera()
+                self.check_debug()
+                self.weight.update()
+                self.check_win()
+            case GameStates.IN_BETWEEN:
+                if is_key_pressed(KEY_SPACE):
+                    self.curr_level += 1
+                    self.weight.arr = []
+                    self.blood.arr = []
+                    self.win_tiles = []
+                    self.startup(LEVELS[self.curr_level])
+                    self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
+
+                    self.game_state = GameStates.GAME
+                
+        
     def check_debug(self):
         if is_key_pressed(KEY_I):
             self.debug = not self.debug
@@ -129,10 +163,12 @@ class Game:
             draw_text(f"Grounded: {self.player.grounded}", 200, 200, 20, PINK)
     
     def draw(self):
-        self.draw_level(LEVEL1)
-        self.player.draw()
-        self.blood.draw()
-        self.weight.draw()
-        self.draw_debug()
-
-
+        match self.game_state:
+            case GameStates.GAME:
+                self.draw_level(LEVELS[self.curr_level])
+                self.player.draw()
+                self.blood.draw()
+                self.weight.draw()
+                self.draw_debug()
+            case GameStates.IN_BETWEEN:
+                draw_rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT, WHITE)
