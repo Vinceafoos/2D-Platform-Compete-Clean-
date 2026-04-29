@@ -190,7 +190,7 @@ class Player():
             Rectangle(self.position.x , self.position.y, PLAYER_BOUNDING_BOX_WIDTH , PLAYER_BOUNDING_BOX_HEIGHT),
             Vector2(0, 0), 0.0, WHITE,
         )
-        draw_rectangle_lines(int(self.position.x), int(self.position.y), PLAYER_SIZE, PLAYER_SIZE, RED)
+        draw_rectangle_lines(int(self.position.x), int(self.position.y), PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT, RED)
 
 
     def shutdown(self):
