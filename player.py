@@ -61,7 +61,8 @@ class Player():
                 self.state.row = State.CHARGE
                 self.state.sprites_in_row = 4
                 self.state.type = AnimationType.ONESHOT
-                self.state.duration = 0.5
+                self.state.duration = 1
+                self.state.duration_left = 1
         self.state.last = self.state.sprites_in_row - 1
 
     def update(self):
@@ -79,7 +80,7 @@ class Player():
             self.player_direction = Direction.LEFT
             motion -= 1
         else:
-            if self.grounded:
+            if self.grounded and self.state.row != State.CHARGE:
                 self.transition(State.IDLE)
 
         self.velocity.x = motion * MOVE_SPEED
@@ -94,7 +95,9 @@ class Player():
             self.grounded = False
 
         if is_key_down(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT):
-            self.transition(State.CHARGE)
+            print(self.state.row)
+            if self.state.row != State.CHARGE:
+                self.transition(State.CHARGE)
             if self.jump_vel > -1000 - self.strength:
                 self.jump_vel -= 2
             else:
