@@ -24,13 +24,13 @@ class Player():
         self.player_texture = load_texture(SHEET)
         self.player_frame = self.state.frame()
         self.player_direction = Direction.RIGHT
-        self.bounding_box = Rectangle(self.position.x,self.position.y, PLAYER_SIZE, PLAYER_SIZE)
+        self.bounding_box = Rectangle(self.position.x,self.position.y, PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT)
         self.strength = 0
         self.health = 3
 
     def get_rect(self):
         """Returns the player's collision bounding box (top-left, width, height)."""
-        return (self.position.x, self.position.y, PLAYER_SIZE, PLAYER_SIZE)
+        return (self.position.x, self.position.y, PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT)
 
     def transition(self, state):
         if state == self.state.row:
@@ -166,7 +166,7 @@ class Player():
                         if axis == 'X':
                             # Reverses direction on horizontal collision
                             if self.velocity.x > 0:
-                                self.position.x = tile_rect[0] - PLAYER_SIZE
+                                self.position.x = tile_rect[0] - PLAYER_BOUNDING_BOX_WIDTH
                             elif self.velocity.x < 0:
                                 self.position.x = tile_rect[0] + TILE_SIZE
                             #self.velocity.x *= -1 # Reverse direction
@@ -187,7 +187,7 @@ class Player():
         draw_texture_pro(
             self.player_texture,
             self.player_frame,
-            Rectangle(self.position.x , self.position.y, PLAYER_SIZE , PLAYER_SIZE),
+            Rectangle(self.position.x , self.position.y, PLAYER_BOUNDING_BOX_WIDTH , PLAYER_BOUNDING_BOX_HEIGHT),
             Vector2(0, 0), 0.0, WHITE,
         )
-        draw_rectangle_lines(int(self.position.x), int(self.position.y), PLAYER_SIZE, PLAYER_SIZE, RED)
+        draw_rectangle_lines(int(self.position.x), int(self.position.y), PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT, RED)
