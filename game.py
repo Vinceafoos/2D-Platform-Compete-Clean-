@@ -51,6 +51,11 @@ class Game:
                     y = row * TILE_SIZE
                     self.win_tiles.append(Rectangle(x,y,TILE_SIZE, TILE_SIZE))
 
+        self.track_texture = load_texture(TRACK_GROUND)
+        self.air_texture = load_texture(AIR_GROUND)
+        self.sand_texture = load_texture(SAND_GROUND)
+        self.dirt_texture = load_texture(DIRT_GROUND)
+
 
     def item_player_collision(self):
         for item in self.weight.arr:
@@ -125,12 +130,20 @@ class Game:
         for row in range(TILE_ROWS):
             for col in range(TILE_COLS):
                 tile_value = level[row][col]
-                if tile_value == TILE_SOLID:
+                if tile_value >= 10 or tile_value == TILE_SOLID:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
-                    
-                    draw_rectangle(x, y, TILE_SIZE, TILE_SIZE, DARKGRAY)
-                    draw_rectangle_lines(x, y, TILE_SIZE, TILE_SIZE, BLACK)
+                    match tile_value:
+                        case 10:
+                            draw_texture(self.track_texture,x,y, WHITE)
+                        case 11:
+                            draw_texture(self.air_texture,x,y, WHITE)
+                        case 12:
+                            draw_texture(self.sand_texture,x,y, WHITE)
+                        case 13:
+                            draw_texture(self.dirt_texture,x,y, WHITE)
+                        case 1:
+                            draw_texture(self.dirt_texture, x, y, WHITE)
 
     def draw_hud(self):
         draw_rectangle(0,0,TILE_COLS * TILE_SIZE,30, WHITE)
@@ -157,3 +170,10 @@ class Game:
             case GameStates.SPLASH:
                 draw_text("SPLASH", 200, 200, 40, RED)
 
+
+    def shutdown(self):
+        self.player.shutdown()
+        unload_texture(TRACK_GROUND)
+        unload_texture(AIR_GROUND)
+        unload_texture(SAND_GROUND)
+        unload_texture(DIRT_GROUND)
