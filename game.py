@@ -26,33 +26,9 @@ class Game:
         self.start_time = 0
         self.debug = False
         self.win_tiles = []
-        self.game_state = 6
-        self.curr_level = -1
+        self.game_state = 1
+        self.curr_level = 0
 
-    """
-    def parse_level(level):
-        
-        # Create a deep copy of the level to modify the tiles, leaving the original map intact
-        new_level = [row[:] for row in level] 
-        
-        for r in range(TILE_ROWS):
-            for c in range(TILE_COLS):
-                x = c * TILE_SIZE
-                y = r * TILE_SIZE
-
-                if new_level[r][c] == TILE_COIN:
-                    # Coin position is center
-                    coins.append((x + TILE_SIZE / 2, y + TILE_SIZE / 2))
-                    new_level[r][c] = TILE_AIR 
-                
-                elif new_level[r][c] == TILE_ENEMY:
-                    # Enemy position is top-left
-                    enemies.append(Enemy(x, y))
-                    new_level[r][c] = TILE_AIR 
-                    
-        return new_level
-        """
-    
     def startup(self, level):
         self.start_time = get_time()
         self.camera.target = Vector2(self.player.position.x, self.player.position.y)
@@ -107,9 +83,14 @@ class Game:
                     self.weight.arr = []
                     self.blood.arr = []
                     self.win_tiles = []
+                    self.player.strength = 0
                     self.startup(LEVELS[self.curr_level])
                     self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
+                    self.game_state = GameStates.GAME
 
+            case GameStates.SPLASH:
+                if is_key_pressed(KEY_SPACE):
+                    self.startup(LEVELS[self.curr_level])
                     self.game_state = GameStates.GAME
                 
         
@@ -172,3 +153,7 @@ class Game:
                 self.draw_debug()
             case GameStates.IN_BETWEEN:
                 draw_rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT, WHITE)
+                draw_text("in_between", 200, 200, 40, RED)
+            case GameStates.SPLASH:
+                draw_text("SPLASH", 200, 200, 40, RED)
+

@@ -7,8 +7,6 @@ if __name__ == '__main__':
   init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Compete Clean")
   set_target_fps(120)
   current_game = Game()
-  #game_level = current_game.parse_level(LEVEL1)
-  current_game.startup(LEVEL1)
 
   while not window_should_close():
 
