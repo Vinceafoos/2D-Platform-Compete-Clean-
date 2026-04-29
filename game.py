@@ -26,7 +26,7 @@ class Game:
         self.start_time = 0
         self.debug = False
         self.win_tiles = []
-        self.game_state = 1
+        self.game_state = GameStates.SPLASH
         self.curr_level = 0
 
     def startup(self, level):
@@ -156,6 +156,15 @@ class Game:
         if self.debug:
             draw_text(f"Grounded: {self.player.grounded}", 200, 200, 20, PINK)
     
+    def draw_screens(self):
+        match self.game_state:
+            case GameStates.SPLASH:
+                draw_text("SPLASH, space to play", 200, 200, 40, RED)
+            case GameStates.IN_BETWEEN:
+                draw_rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT, WHITE)
+                draw_text("in between, space for next level", 50, 200, 40, RED)
+
+    
     def draw(self):
         match self.game_state:
             case GameStates.GAME:
@@ -164,11 +173,6 @@ class Game:
                 self.blood.draw()
                 self.weight.draw()
                 self.draw_debug()
-            case GameStates.IN_BETWEEN:
-                draw_rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT, WHITE)
-                draw_text("in_between", 200, 200, 40, RED)
-            case GameStates.SPLASH:
-                draw_text("SPLASH", 200, 200, 40, RED)
 
 
     def shutdown(self):

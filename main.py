@@ -18,7 +18,10 @@ if __name__ == '__main__':
 
     current_game.draw()
     end_mode_2d()
-    current_game.draw_hud()
+    if current_game.game_state == GameStates.GAME:
+      current_game.draw_hud()
+    else:
+      current_game.draw_screens()
 
     end_drawing()
 
