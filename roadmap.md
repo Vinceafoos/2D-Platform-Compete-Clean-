@@ -112,7 +112,25 @@ Add HUD and item visuals
 (feat) HUD with counter for evidence, strength, and time  
 (feat) blood bag texture added  
 
+---
+
+### Date: 4/28  
+**Goal**  
+Make jumping more smooth and fix various problems with it
+
+**Implementation**  
+*Technical Plan/Credit*:  
+- Fix the animation of charging the jump
+- Don't allow the player to charge while moving
+
+*Content Credit*: 
+
+**Commit message**  
+fix(charge): no longer can move while charging
+feat(weight): texture on weight and crouch bug fix
+(fix) can no longer jump mid air if falling off a platform
+fix(charge): fix charge animation
 
 **Next/TO DO :**  
-* Add transition screens
+* Start adding transitions between levels
 * Start working on enemies 
