@@ -28,6 +28,7 @@ TRACK_GROUND = str(THIS_DIR/"track.png")
 SAND_GROUND = str(THIS_DIR/"sand.png")
 AIR_GROUND = str(THIS_DIR/"stone.png")
 DIRT_GROUND = str(THIS_DIR/"dirt.png")
+JAVELIN_SPRITE = str(THIS_DIR/"javelin.png")
 WEIGHT_SHEET_TILE_WIDTH = 40
 WEIGHT_SHEET_TILE_HEIGHT = 138
 

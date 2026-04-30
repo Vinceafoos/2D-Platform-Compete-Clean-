@@ -28,6 +28,7 @@ class Game:
         self.win_tiles = []
         self.game_state = GameStates.SPLASH
         self.curr_level = 0
+        self.javelins = []
 
     def startup(self, level):
         self.start_time = get_time()
