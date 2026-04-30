@@ -27,6 +27,7 @@ class Player():
         self.bounding_box = Rectangle(self.position.x,self.position.y, PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT)
         self.strength = 0
         self.health = 3
+        self.on_sand = False
 
     def get_rect(self):
         """Returns the player's collision bounding box (top-left, width, height)."""
@@ -84,6 +85,9 @@ class Player():
                 self.transition(State.IDLE)
 
         self.velocity.x = motion * MOVE_SPEED
+        print(self.on_sand)
+        if self.on_sand:
+            self.velocity.x /= 2
         self.position.x += self.velocity.x*frame_time
         self.bounding_box.x = self.position.x
 
@@ -92,9 +96,11 @@ class Player():
         if self.grounded and is_key_pressed(KeyboardKey.KEY_UP):
             self.transition(State.JUMP)
             self.velocity.y = self.jump_vel
+            if self.on_sand:
+                self.velocity.y /= 2
             self.grounded = False
 
-        if is_key_down(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT):
+        if is_key_down(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT) and not self.on_sand:
             print(self.state.row)
             if self.state.row != State.CHARGE:
                 self.transition(State.CHARGE)
@@ -103,7 +109,7 @@ class Player():
             else:
                 print("jump maxed")
 
-        if is_key_released(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT):
+        if is_key_released(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT) and not self.on_sand:
             self.transition(State.JUMP)
             self.grounded = False
             self.velocity.y = self.jump_vel
@@ -143,9 +149,8 @@ class Player():
 
 
     def handle_tile_collision(self, level, axis):
-        """Enemy collision: reverses direction on horizontal wall contact, respects vertical floor contact."""
-        enemy_rect = self.get_rect()
-        px, py, pw, ph = enemy_rect
+        player_rect = self.get_rect()
+        px, py, pw, ph = player_rect
         
         min_col = int(px / TILE_SIZE)
         max_col = int((px + pw) / TILE_SIZE)
@@ -161,7 +166,7 @@ class Player():
                 if level[row][col] >= 10 or level[row][col] == TILE_SOLID:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
-                    if check_collision_recs(enemy_rect, tile_rect):
+                    if check_collision_recs(player_rect, tile_rect):
                         
                         if axis == 'X':
                             # Reverses direction on horizontal collision
@@ -173,24 +178,29 @@ class Player():
 
                         elif axis == 'Y':
                             if self.velocity.y >= 0.0: # Falling (Hitting Ground)
-                                self.position.y = tile_rect[1] - PLAYER_SIZE
+                                self.position.y = tile_rect[1] - PLAYER_BOUNDING_BOX_HEIGHT
                                 self.grounded = True 
                                 self.velocity.y = 0.0 
+                                if level[row][col] == TILE_SAND:
+                                    self.on_sand = True
+                                else:
+                                    self.on_sand = False
 
                             elif self.velocity.y < 0.0: # Jumping (Hitting Ceiling)
                                 self.position.y = tile_rect[1] + TILE_SIZE
                                 self.velocity.y = 0.0 
                             
-                        enemy_rect = self.get_rect() # Update rect after resolution
+                        player_rect = self.get_rect() # Update rect after resolution
 
-    def draw(self):
+    def draw(self, debug):
         draw_texture_pro(
             self.player_texture,
             self.player_frame,
             Rectangle(self.position.x , self.position.y, PLAYER_BOUNDING_BOX_WIDTH , PLAYER_BOUNDING_BOX_HEIGHT),
             Vector2(0, 0), 0.0, WHITE,
         )
-        draw_rectangle_lines(int(self.position.x), int(self.position.y), PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT, RED)
+        if debug:
+            draw_rectangle_lines(int(self.position.x), int(self.position.y), PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT, RED)
 
 
     def shutdown(self):

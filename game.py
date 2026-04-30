@@ -169,7 +169,7 @@ class Game:
         match self.game_state:
             case GameStates.GAME:
                 self.draw_level(LEVELS[self.curr_level])
-                self.player.draw()
+                self.player.draw(self.debug)
                 self.blood.draw()
                 self.weight.draw()
                 self.draw_debug()
