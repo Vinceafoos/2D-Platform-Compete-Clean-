@@ -134,3 +134,21 @@ fix(charge): fix charge animation
 **Next/TO DO :**  
 * Start adding transitions between levels
 * Start working on enemies 
+
+
+
+### Date: 4/29
+**Goal**  
+Add Textures into the world
+
+**Implementation**  
+*Technical Plan/Credit*:  
+- Using Photoshop
+
+*Content Credit*: Gemini 3 Pro for base images and Adobe Photoshop for editing
+
+**Commit message**  
+feat(world textures): added temporary world textures
+
+**Next/TO DO :**  
+* Work on enemy sprite sheet and implementation
