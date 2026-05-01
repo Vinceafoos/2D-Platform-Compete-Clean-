@@ -13,6 +13,7 @@ class GameStates:
     LOSE = 4
     INSTRUCTIONS = 5
     IN_BETWEEN = 6
+    END = 7
 
 class Game:
     def __init__(self):
@@ -29,6 +30,7 @@ class Game:
         self.game_state = GameStates.SPLASH
         self.curr_level = 0
         self.javelins = []
+        self.total_time = 0
 
     def startup(self, level):
         self.start_time = get_time()
@@ -94,14 +96,20 @@ class Game:
                     self.blood.arr = []
                     self.win_tiles = []
                     self.player.strength = 0
-                    self.startup(LEVELS[self.curr_level])
-                    self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
-                    self.game_state = GameStates.GAME
+                    self.total_time += self.curr_time
+                    if self.curr_level > 2:
+                        self.game_state = GameStates.END
+                    else:
+                        self.startup(LEVELS[self.curr_level])
+                        self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
+                        self.game_state = GameStates.GAME
 
             case GameStates.SPLASH:
                 if is_key_pressed(KEY_SPACE):
                     self.startup(LEVELS[self.curr_level])
                     self.game_state = GameStates.GAME
+            case GameStates.END:
+                pass
                 
         
     def check_debug(self):
@@ -168,8 +176,10 @@ class Game:
             case GameStates.IN_BETWEEN:
                 draw_rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT, WHITE)
                 draw_text("in between, space for next level", 50, 200, 40, RED)
+            case GameStates.END:
+                draw_text(f"evidence collected: {self.evidence}", 200, 200, 30, WHITE)
+                draw_text(f"it took you {self.total_time:.2f} seconds to finish", 200, 300, 30, WHITE)
 
-    
     def draw(self):
         match self.game_state:
             case GameStates.GAME:
@@ -178,8 +188,7 @@ class Game:
                 self.blood.draw()
                 self.weight.draw()
                 self.draw_debug()
-
-
+            
     def shutdown(self):
         self.player.shutdown()
         unload_texture(TRACK_GROUND)
