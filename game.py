@@ -53,7 +53,7 @@ class Game:
                     self.win_tiles.append(Rectangle(x,y,TILE_SIZE, TILE_SIZE))
 
         self.track_texture = load_texture(TRACK_GROUND)
-        self.air_texture = load_texture(AIR_GROUND)
+        self.stone_texture = load_texture(STONE_GROUND)
         self.sand_texture = load_texture(SAND_GROUND)
         self.dirt_texture = load_texture(DIRT_GROUND)
 
@@ -72,6 +72,10 @@ class Game:
         for rec in self.win_tiles:
             if check_collision_recs(self.player.bounding_box, rec):
                 self.game_state = GameStates.IN_BETWEEN
+        if self.debug:
+            if is_key_pressed(KeyboardKey.KEY_N):
+                self.game_state = GameStates.IN_BETWEEN
+
 
     def update(self):
         match self.game_state:
@@ -138,7 +142,7 @@ class Game:
                         case 10:
                             draw_texture(self.track_texture,x,y, WHITE)
                         case 11:
-                            draw_texture(self.air_texture,x,y, WHITE)
+                            draw_texture(self.stone_texture,x,y, WHITE)
                         case 12:
                             draw_texture(self.sand_texture,x,y, WHITE)
                         case 13:
@@ -179,6 +183,6 @@ class Game:
     def shutdown(self):
         self.player.shutdown()
         unload_texture(TRACK_GROUND)
-        unload_texture(AIR_GROUND)
+        unload_texture(STONE_GROUND)
         unload_texture(SAND_GROUND)
         unload_texture(DIRT_GROUND)

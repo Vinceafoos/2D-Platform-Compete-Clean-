@@ -85,7 +85,6 @@ class Player():
                 self.transition(State.IDLE)
 
         self.velocity.x = motion * MOVE_SPEED
-        print(self.on_sand)
         if self.on_sand:
             self.velocity.x /= 2
         self.position.x += self.velocity.x*frame_time
@@ -101,7 +100,6 @@ class Player():
             self.grounded = False
 
         if is_key_down(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT) and not self.on_sand:
-            print(self.state.row)
             if self.state.row != State.CHARGE:
                 self.transition(State.CHARGE)
             if self.jump_vel > -1000 - self.strength:
