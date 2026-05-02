@@ -99,15 +99,15 @@ class Player():
                 self.velocity.y /= 2
             self.grounded = False
 
-        if is_key_down(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT) and not self.on_sand:
+        if is_key_down(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT) and not self.on_sand and self.strength > 0:
             if self.state.row != State.CHARGE:
                 self.transition(State.CHARGE)
-            if self.jump_vel > -1000 - self.strength:
+            if self.jump_vel > -800 - self.strength:
                 self.jump_vel -= 2
             else:
                 print("jump maxed")
 
-        if is_key_released(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT) and not self.on_sand:
+        if is_key_released(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT) and not self.on_sand and self.strength > 0:
             self.transition(State.JUMP)
             self.grounded = False
             self.velocity.y = self.jump_vel

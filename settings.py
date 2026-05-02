@@ -57,10 +57,9 @@ def load_level_from_csv(filename):
             level.append([int(cell) for cell in row])
     return level
 
-
-LEVEL1 = load_level_from_csv("cc_level1.csv")
-LEVEL2 = load_level_from_csv("cc_level2.csv")
-LEVEL3 = load_level_from_csv("cc_level3.csv")
+LEVEL1 = load_level_from_csv (str(THIS_DIR/"cc_level1.csv"))
+LEVEL2 = load_level_from_csv(str(THIS_DIR/"cc_level2.csv"))
+LEVEL3 = load_level_from_csv(str(THIS_DIR/"cc_level3.csv"))
 
 
 TILE_ROWS = len(LEVEL1)
