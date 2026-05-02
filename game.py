@@ -74,7 +74,7 @@ class Game:
     def item_player_collision(self):
         for item in self.weight.arr:
             if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12), item.radius, self.player.bounding_box):
-                if item.active: self.player.strength += 60
+                if item.active: self.player.strength += 200
                 item.active = False
         for item in self.blood.arr:
             if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12), item.radius, self.player.bounding_box):
