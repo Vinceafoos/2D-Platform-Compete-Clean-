@@ -20,6 +20,10 @@ SPRITE_SHEET_TILE_HEIGHT = 190
 PLAYER_SIZE = 40
 PLAYER_BOUNDING_BOX_WIDTH = 30
 PLAYER_BOUNDING_BOX_HEIGHT = 40
+PLAYER_HITBOX_X_OFFSET = 5   # inset from left of drawn sprite — tune these
+PLAYER_HITBOX_Y_OFFSET = 2   # inset from top of drawn sprite
+PLAYER_HITBOX_WIDTH = 20     # tighter width
+PLAYER_HITBOX_HEIGHT = 36    # tighter height
 
 THIS_DIR = Path(__file__).resolve().parent
 SHEET = str(THIS_DIR/"wada_spritesheet.png")
@@ -49,6 +53,7 @@ TILE_ENEMY = 3
 TILE_SPIKE = 4
 TILE_BLOOD = 6
 TILE_WIN = 7
+TILE_THROWER = 21
 
 
 def load_level_from_csv(filename):

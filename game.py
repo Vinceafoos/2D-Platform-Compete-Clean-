@@ -5,6 +5,8 @@ from player import *
 from enemy import *
 from weight import *
 from blood import *
+from javelin import *
+from thrower import *
 
 class GameStates:
     SPLASH = 1
@@ -30,6 +32,7 @@ class Game:
         self.game_state = GameStates.SPLASH
         self.curr_level = 0
         self.javelins = []
+        self.enemies = []
         self.total_time = 0
         self.splash = load_texture(SPLASH)
         self.splash_src = Rectangle(0,0,self.splash.width,self.splash.height)
@@ -57,6 +60,10 @@ class Game:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
                     self.win_tiles.append(Rectangle(x,y,TILE_SIZE, TILE_SIZE))
+                if tile_value == TILE_THROWER:
+                    x = col * TILE_SIZE
+                    y = row * TILE_SIZE
+                    self.enemies.append(Thrower(Vector2(x,y)))
 
         self.track_texture = load_texture(TRACK_GROUND)
         self.stone_texture = load_texture(STONE_GROUND)
@@ -73,6 +80,12 @@ class Game:
             if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12), item.radius, self.player.bounding_box):
                 if item.active: self.evidence += 1
                 item.active = False
+        for javelin in self.javelins:
+            if check_collision_circle_rec(javelin.tip(), javelin.tip_radius, self.player.bounding_box):
+                if javelin.active:
+                    self.player.health -= 1
+                    javelin.active = False
+                    self.javelins.pop()
         
     def check_win(self):
         for rec in self.win_tiles:
@@ -83,12 +96,40 @@ class Game:
                 self.game_state = GameStates.IN_BETWEEN
 
 
+    def hits_solid(self, jav, level):
+            col = int(jav.position.x // TILE_SIZE)
+            row = int(jav.position.y // TILE_SIZE)
+            return level[row][col] == TILE_SOLID or level[row][col] >= 10
+
+    def out_of_bounds(self, jav):
+            col = int(jav.position.x // TILE_SIZE)
+            row = int(jav.position.y // TILE_SIZE)
+            return row < 0 or row >= TILE_ROWS or col < 0 or col >= TILE_COLS
+    
+    def jav_world_collisions(self, level):
+        to_remove = []
+        for jav in self.javelins:
+            if not jav.active:
+                continue
+            if self.out_of_bounds(jav):
+                to_remove.append(jav)
+            elif self.hits_solid(jav, level):
+                jav.stick()
+        self.javelins = [j for j in self.javelins if j not in to_remove]
+
     def update(self):
         match self.game_state:
             case GameStates.GAME:
                 self.curr_time = get_time() - self.start_time
                 self.item_player_collision()
                 self.player.update(LEVELS[self.curr_level])
+                for enemy in self.enemies:
+                    javelin = enemy.update()
+                    if javelin != None:
+                        self.javelins.append(javelin)
+                for javelin in self.javelins:
+                    javelin.update()
+                self.jav_world_collisions(LEVELS[self.curr_level])
                 self.update_camera()
                 self.check_debug()
                 self.weight.update()
@@ -189,6 +230,10 @@ class Game:
             case GameStates.GAME:
                 self.draw_level(LEVELS[self.curr_level])
                 self.player.draw(self.debug)
+                for enemy in self.enemies:
+                    enemy.draw()
+                for javelin in self.javelins:
+                    javelin.draw(self.debug)
                 self.blood.draw()
                 self.weight.draw()
                 self.draw_debug()

@@ -24,14 +24,18 @@ class Player():
         self.player_texture = load_texture(SHEET)
         self.player_frame = self.state.frame()
         self.player_direction = Direction.RIGHT
-        self.bounding_box = Rectangle(self.position.x,self.position.y, PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT)
+        self.bounding_box = Rectangle(self.position.x + PLAYER_HITBOX_X_OFFSET, self.position.y + PLAYER_HITBOX_Y_OFFSET, PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT)
         self.strength = 0
         self.health = 3
         self.on_sand = False
 
     def get_rect(self):
-        """Returns the player's collision bounding box (top-left, width, height)."""
-        return (self.position.x, self.position.y, PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT)
+        return (
+            self.position.x + PLAYER_HITBOX_X_OFFSET,
+            self.position.y + PLAYER_HITBOX_Y_OFFSET,
+            PLAYER_HITBOX_WIDTH,
+            PLAYER_HITBOX_HEIGHT,
+        )
 
     def transition(self, state):
         if state == self.state.row:
@@ -88,7 +92,7 @@ class Player():
         if self.on_sand:
             self.velocity.x /= 2
         self.position.x += self.velocity.x*frame_time
-        self.bounding_box.x = self.position.x
+        self.bounding_box.x = self.position.x + PLAYER_HITBOX_X_OFFSET
 
         self.handle_tile_collision(level, 'X')
 
@@ -117,7 +121,7 @@ class Player():
 
         self.velocity.y += self.gravity * frame_time
         self.position.y += self.velocity.y * frame_time
-        self.bounding_box.y = self.position.y
+        self.bounding_box.y = self.position.y + PLAYER_HITBOX_Y_OFFSET
         if(self.velocity.y > RESTING_VELOCTY):
             self.grounded = False
 
@@ -161,16 +165,14 @@ class Player():
                     if check_collision_recs(player_rect, tile_rect):
                         
                         if axis == 'X':
-                            # Reverses direction on horizontal collision
                             if self.velocity.x > 0:
-                                self.position.x = tile_rect[0] - PLAYER_BOUNDING_BOX_WIDTH
+                                self.position.x = tile_rect[0] - PLAYER_HITBOX_X_OFFSET - PLAYER_HITBOX_WIDTH
                             elif self.velocity.x < 0:
-                                self.position.x = tile_rect[0] + TILE_SIZE
-                            #self.velocity.x *= -1 # Reverse direction
+                                self.position.x = tile_rect[0] + TILE_SIZE - PLAYER_HITBOX_X_OFFSET
 
                         elif axis == 'Y':
                             if self.velocity.y >= 0.0: # Falling (Hitting Ground)
-                                self.position.y = tile_rect[1] - PLAYER_BOUNDING_BOX_HEIGHT
+                                self.position.y = tile_rect[1] - PLAYER_HITBOX_Y_OFFSET - PLAYER_HITBOX_HEIGHT
                                 self.grounded = True 
                                 self.velocity.y = 0.0 
                                 if level[row][col] == TILE_SAND:
@@ -192,7 +194,7 @@ class Player():
             Vector2(0, 0), 0.0, WHITE,
         )
         if debug:
-            draw_rectangle_lines(int(self.position.x), int(self.position.y), PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT, RED)
+            draw_rectangle_lines(int(self.position.x + PLAYER_HITBOX_X_OFFSET), int(self.position.y + PLAYER_HITBOX_Y_OFFSET), PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, RED)
 
 
     def shutdown(self):
