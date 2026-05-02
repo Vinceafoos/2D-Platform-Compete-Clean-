@@ -133,12 +133,6 @@ class Player():
                     self.transition(State.RUNNING)
                 else:
                     self.transition(State.IDLE)
-        """
-        if self.pos.x < 0:
-            self.pos.x = 0
-        if self.pos.x > WINDOW_WIDTH - PLAYER_SIZE:
-            self.pos.x = WINDOW_WIDTH - PLAYER_SIZE
-        """
 
         self.state.update(frame_time)
         self.player_frame = self.state.frame()

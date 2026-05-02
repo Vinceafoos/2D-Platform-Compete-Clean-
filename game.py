@@ -31,6 +31,10 @@ class Game:
         self.curr_level = 0
         self.javelins = []
         self.total_time = 0
+        self.splash = load_texture(SPLASH)
+        self.splash_src = Rectangle(0,0,self.splash.width,self.splash.height)
+        self.screen_size = Rectangle(0,0,SCREEN_WIDTH, SCREEN_HEIGHT)
+
 
     def startup(self, level):
         self.start_time = get_time()
@@ -171,7 +175,8 @@ class Game:
     def draw_screens(self):
         match self.game_state:
             case GameStates.SPLASH:
-                draw_text("SPLASH, space to play", 200, 200, 40, RED)
+                draw_texture_pro(self.splash, self.splash_src, self.screen_size, (0,0), 0, WHITE)
+                #draw_text("SPLASH, space to play", 200, 200, 40, RED)
             case GameStates.IN_BETWEEN:
                 draw_rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT, WHITE)
                 draw_text("in between, space for next level", 50, 200, 40, RED)
