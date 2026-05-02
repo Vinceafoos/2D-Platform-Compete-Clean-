@@ -127,7 +127,7 @@ class Player():
 
         self.handle_tile_collision(level, 'Y')
 
-        bottom_bound = SCREEN_HEIGHT - PLAYER_SIZE
+        bottom_bound = WORLD_HEIGHT - PLAYER_BOUNDING_BOX_HEIGHT
         if self.position.y >= bottom_bound:
             self.position.y = bottom_bound
             self.velocity.y = 0
