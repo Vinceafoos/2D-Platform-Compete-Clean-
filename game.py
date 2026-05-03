@@ -24,7 +24,8 @@ class Game:
         self.camera = Camera2D()
         self.weight = Weight(0,0)
         self.blood = Blood(0,0)
-        self.evidence = 0
+        self.curr_evidence = 0
+        self.total_evidence = 0
         self.curr_time = 0
         self.start_time = 0
         self.debug = False
@@ -37,6 +38,8 @@ class Game:
         self.splash = load_texture(SPLASH)
         self.splash_src = Rectangle(0,0,self.splash.width,self.splash.height)
         self.screen_size = Rectangle(0,0,SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.level_complete = load_texture(LEVEL_COMPLETE)
+
 
 
     def startup(self, level):
@@ -78,7 +81,7 @@ class Game:
                 item.active = False
         for item in self.blood.arr:
             if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12), item.radius, self.player.bounding_box):
-                if item.active: self.evidence += 1
+                if item.active: self.curr_evidence += 1
                 item.active = False
         for javelin in self.javelins:
             if check_collision_circle_rec(javelin.tip(), javelin.tip_radius, self.player.bounding_box):
@@ -136,6 +139,8 @@ class Game:
                 self.check_win()
             case GameStates.IN_BETWEEN:
                 if is_key_pressed(KEY_SPACE):
+                    self.total_evidence += self.curr_evidence
+                    self.curr_evidence = 0
                     self.curr_level += 1
                     self.weight.arr = []
                     self.blood.arr = []
@@ -204,7 +209,7 @@ class Game:
 
     def draw_hud(self):
         draw_rectangle(0,0,TILE_COLS * TILE_SIZE,30, WHITE)
-        draw_text(f"Evidence Collected: {self.evidence}", 5,5,20, BLACK)
+        draw_text(f"Evidence Collected: {self.curr_evidence}", 5,5,20, BLACK)
         draw_text(f"Strength: {self.player.strength}", 280,5,20, BLACK)
         draw_text(f"Health: {self.player.health}", 470, 5, 20, BLACK)
         draw_text(f"Current Time: {self.curr_time:.2f}", 600,5,20, BLACK)
@@ -219,10 +224,12 @@ class Game:
                 draw_texture_pro(self.splash, self.splash_src, self.screen_size, (0,0), 0, WHITE)
                 #draw_text("SPLASH, space to play", 200, 200, 40, RED)
             case GameStates.IN_BETWEEN:
-                draw_rectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT, WHITE)
-                draw_text("in between, space for next level", 50, 200, 40, RED)
+                draw_texture_pro(self.level_complete, self.splash_src, self.screen_size, (0,0), 0, WHITE)
+                draw_text(f"{self.curr_evidence} Blood Bags", 265, 280, 40, RED)
+                draw_text(f"{self.curr_time:.2f} Seconds", 265, 415, 40, WHITE)
+
             case GameStates.END:
-                draw_text(f"evidence collected: {self.evidence}", 200, 200, 30, WHITE)
+                draw_text(f"evidence collected: {self.curr_evidence}", 200, 200, 30, WHITE)
                 draw_text(f"it took you {self.total_time:.2f} seconds to finish", 200, 300, 30, WHITE)
 
     def draw(self):
