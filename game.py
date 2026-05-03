@@ -344,7 +344,7 @@ class Game:
 
     def draw_hud(self):
         #draw_texture(self.background_texture, 0, 0, LIGHTGRAY)
-        draw_rectangle(0,0,TILE_COLS * TILE_SIZE,30, WHITE)
+        draw_rectangle(0,0,TILE_COLS * TILE_SIZE,30, RAYWHITE)
         draw_text(f"Evidence Collected: {self.curr_evidence}", 5,5,20, BLACK)
         draw_text(f"Strength: {self.player.strength}", 280,5,20, BLACK)
         draw_text(f"Health: {self.player.health}", 470, 5, 20, BLACK)
