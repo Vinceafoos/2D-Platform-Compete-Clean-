@@ -65,7 +65,7 @@ class Game:
                 if tile_value == TILE_BLOOD:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
-                    if random.random() < 0.9:
+                    if random.random() < 0.8:
                         self.blood.arr.append(Blood(int(x + 5), int(y + 5)))
                         self.num_evidence += 1
                 if tile_value == TILE_WIN:
@@ -178,7 +178,7 @@ class Game:
                 if is_key_pressed(KEY_SPACE):
                     self.next_level()
                     if self.curr_level > 2:
-                        self.check_win()
+                        self.calculate_win()
                         self.game_state = GameStates.CALCULATING
                     else:
                         self.startup(LEVELS[self.curr_level])
