@@ -14,14 +14,15 @@ if __name__ == '__main__':
 
     begin_drawing()
     clear_background(SKYBLUE)
-    begin_mode_2d(current_game.camera)
-
-    current_game.draw()
-    end_mode_2d()
     if current_game.game_state == GameStates.GAME:
       current_game.draw_hud()
     else:
       current_game.draw_screens()
+    begin_mode_2d(current_game.camera)
+
+    current_game.draw()
+    end_mode_2d()
+    
 
     end_drawing()
 

@@ -72,7 +72,7 @@ class Game:
         self.stone_texture = load_texture(STONE_GROUND)
         self.sand_texture = load_texture(SAND_GROUND)
         self.dirt_texture = load_texture(DIRT_GROUND)
-        self.background_texture = load_texture()
+        self.background_texture = load_texture(BACKGROUND)
 
 
     def item_player_collision(self):
@@ -211,6 +211,7 @@ class Game:
                             draw_texture(self.dirt_texture, x, y, WHITE)
 
     def draw_hud(self):
+        draw_texture(self.background_texture, 0, 0, LIGHTGRAY)
         draw_rectangle(0,0,TILE_COLS * TILE_SIZE,30, WHITE)
         draw_text(f"Evidence Collected: {self.curr_evidence}", 5,5,20, BLACK)
         draw_text(f"Strength: {self.player.strength}", 280,5,20, BLACK)
