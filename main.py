@@ -22,7 +22,6 @@ if __name__ == '__main__':
 
     current_game.draw()
     end_mode_2d()
-    
 
     end_drawing()
 
