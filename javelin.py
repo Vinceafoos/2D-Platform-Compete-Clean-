@@ -5,14 +5,17 @@ from settings import *
 from game import *
 from enemy import *
 import math
+import random
 
 
 
 
 class Javelin:
-    def __init__(self, position, speed_x=-200, speed_y=-60):
+    def __init__(self, position):
         self.position = position
         self.texture = load_texture(JAVELIN_SPRITE)
+        speed_x = random.randint(-250, -150)
+        speed_y = random.randint(-70, -50)
         self.velocity = Vector2(speed_x, speed_y)
         self.active = True
         self.stuck_angle = None

@@ -36,8 +36,8 @@ class Thrower(Enemy):
             last = 0,
             cur = 0,
             step = 1,
-            duration = 0.5,
-            duration_left = 0.5,
+            duration = 0.3,
+            duration_left = 0.3,
             anim_type=AnimationType.REPEATING,
             row = 6,
             sprites_in_row=1
@@ -79,8 +79,8 @@ class Thrower(Enemy):
                 self.animation.sprites_in_row = 4
                 self.animation.last = 2
                 self.animation.type = AnimationType.ONESHOT
-                self.animation.duration_left = 2.0
-                self.animation.duration = 2.0
+                self.animation.duration_left = 0.5
+                self.animation.duration = 0.5
     
     def draw(self):
         
