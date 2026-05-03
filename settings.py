@@ -26,16 +26,17 @@ PLAYER_HITBOX_WIDTH = 20     # tighter width
 PLAYER_HITBOX_HEIGHT = 36    # tighter height
 
 THIS_DIR = Path(__file__).resolve().parent
-SHEET = str(THIS_DIR/"wada_spritesheet.png")
-BLOOD_SPRITE = str(THIS_DIR/"blood_bag.png")
-WEIGHT_SPRITE = str(THIS_DIR/"weight_sheet.png")
-TRACK_GROUND = str(THIS_DIR/"track.png")
-SAND_GROUND = str(THIS_DIR/"sand.png")
-STONE_GROUND = str(THIS_DIR/"stone.png")
-DIRT_GROUND = str(THIS_DIR/"dirt.png")
-JAVELIN_SPRITE = str(THIS_DIR/"javelin.png")
-SPLASH = str(THIS_DIR/"splash.png")
-LEVEL_COMPLETE = str(THIS_DIR/"level_complete.png")
+SHEET = str(THIS_DIR/"assets/wada_spritesheet.png")
+BLOOD_SPRITE = str(THIS_DIR/"assets/blood_bag.png")
+WEIGHT_SPRITE = str(THIS_DIR/"assets/weight_sheet.png")
+TRACK_GROUND = str(THIS_DIR/"assets/track.png")
+SAND_GROUND = str(THIS_DIR/"assets/sand.png")
+STONE_GROUND = str(THIS_DIR/"assets/stone.png")
+DIRT_GROUND = str(THIS_DIR/"assets/dirt.png")
+JAVELIN_SPRITE = str(THIS_DIR/"assets/javelin.png")
+SPLASH = str(THIS_DIR/"assets/splash.png")
+LEVEL_COMPLETE = str(THIS_DIR/"assets/level_complete.png")
+BACKGROUND = str(THIS_DIR/"assets/complete_clean_background.png")
 
 WEIGHT_SHEET_TILE_WIDTH = 40
 WEIGHT_SHEET_TILE_HEIGHT = 138
@@ -65,9 +66,9 @@ def load_level_from_csv(filename):
             level.append([int(cell) for cell in row])
     return level
 
-LEVEL1 = load_level_from_csv (str(THIS_DIR/"cc_level1.csv"))
-LEVEL2 = load_level_from_csv(str(THIS_DIR/"cc_level2.csv"))
-LEVEL3 = load_level_from_csv(str(THIS_DIR/"cc_level3.csv"))
+LEVEL1 = load_level_from_csv (str(THIS_DIR/"levels/cc_level1.csv"))
+LEVEL2 = load_level_from_csv(str(THIS_DIR/"levels/cc_level2.csv"))
+LEVEL3 = load_level_from_csv(str(THIS_DIR/"levels/cc_level3.csv"))
 
 
 TILE_ROWS = len(LEVEL1)

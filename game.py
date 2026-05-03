@@ -72,6 +72,7 @@ class Game:
         self.stone_texture = load_texture(STONE_GROUND)
         self.sand_texture = load_texture(SAND_GROUND)
         self.dirt_texture = load_texture(DIRT_GROUND)
+        self.background_texture = load_texture()
 
 
     def item_player_collision(self):
@@ -248,6 +249,10 @@ class Game:
             
     def shutdown(self):
         self.player.shutdown()
+        for enemy in self.enemies:
+            enemy.shutdown()
+        for javelin in self.javelins:
+            javelin.shutdown()
         unload_texture(TRACK_GROUND)
         unload_texture(STONE_GROUND)
         unload_texture(SAND_GROUND)

@@ -91,3 +91,6 @@ class Thrower(Enemy):
             (0,0), 0.0, WHITE
         )
         
+
+    def shutdown(self):
+        unload_texture(self.texture)

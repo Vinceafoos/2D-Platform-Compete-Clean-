@@ -63,3 +63,6 @@ class Javelin:
         if debug:
             t = self.tip()
             draw_circle_lines(int(t.x), int(t.y), self.tip_radius, RED)
+
+    def shutdown(self):
+        unload_texture(self.texture)
