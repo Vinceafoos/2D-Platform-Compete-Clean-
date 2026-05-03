@@ -37,6 +37,10 @@ JAVELIN_SPRITE = str(THIS_DIR/"assets/javelin.png")
 SPLASH = str(THIS_DIR/"assets/splash.png")
 LEVEL_COMPLETE = str(THIS_DIR/"assets/level_complete.png")
 BACKGROUND = str(THIS_DIR/"assets/complete_clean_background.png")
+CALCULATING = str(THIS_DIR/"assets/calculating.png")
+ESCAPED = str(THIS_DIR/"assets/escaped.png")
+CAUGHT = str(THIS_DIR/"assets/caught.png")
+
 
 WEIGHT_SHEET_TILE_WIDTH = 40
 WEIGHT_SHEET_TILE_HEIGHT = 138

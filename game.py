@@ -7,6 +7,7 @@ from weight import *
 from blood import *
 from javelin import *
 from thrower import *
+import random
 
 class GameStates:
     SPLASH = 1
@@ -15,7 +16,8 @@ class GameStates:
     LOSE = 4
     INSTRUCTIONS = 5
     IN_BETWEEN = 6
-    END = 7
+    CALCULATING = 7
+
 
 class Game:
     def __init__(self):
@@ -39,7 +41,12 @@ class Game:
         self.splash_src = Rectangle(0,0,self.splash.width,self.splash.height)
         self.screen_size = Rectangle(0,0,SCREEN_WIDTH, SCREEN_HEIGHT)
         self.level_complete = load_texture(LEVEL_COMPLETE)
-
+        self.num_evidence = 0
+        self.win = False
+        self.calculating = load_texture(CALCULATING)
+        self.loading_bar = Rectangle(215,400,0,30)
+        self.caught = load_texture(CAUGHT)
+        self.escaped = load_texture(ESCAPED)
 
 
     def startup(self, level):
@@ -58,7 +65,9 @@ class Game:
                 if tile_value == TILE_BLOOD:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
-                    self.blood.arr.append(Blood(int(x + 5), int(y + 5)))
+                    if random.random() < 0.9:
+                        self.blood.arr.append(Blood(int(x + 5), int(y + 5)))
+                        self.num_evidence += 1
                 if tile_value == TILE_WIN:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
@@ -123,6 +132,31 @@ class Game:
                 jav.stick()
         self.javelins = [j for j in self.javelins if j not in to_remove]
 
+    def calculate_win(self):
+        percent = self.total_evidence / self.num_evidence
+        if random.random() < percent:
+            self.win = True
+    
+    def next_level(self):
+        self.total_evidence += self.curr_evidence
+        self.curr_evidence = 0
+        self.curr_level += 1
+        self.weight.arr = []
+        self.blood.arr = []
+        self.win_tiles = []
+        self.player.strength = 0
+        self.total_time += self.curr_time
+
+    def reset(self):
+        self.next_level()
+        self.total_time = 0
+        self.total_evidence = 0
+        self.num_evidence = 0
+        self.win = False
+        self.curr_level = 0
+        self.game_state = GameStates.SPLASH
+
+
     def update(self):
         match self.game_state:
             case GameStates.GAME:
@@ -142,16 +176,10 @@ class Game:
                 self.check_win()
             case GameStates.IN_BETWEEN:
                 if is_key_pressed(KEY_SPACE):
-                    self.total_evidence += self.curr_evidence
-                    self.curr_evidence = 0
-                    self.curr_level += 1
-                    self.weight.arr = []
-                    self.blood.arr = []
-                    self.win_tiles = []
-                    self.player.strength = 0
-                    self.total_time += self.curr_time
+                    self.next_level()
                     if self.curr_level > 2:
-                        self.game_state = GameStates.END
+                        self.check_win()
+                        self.game_state = GameStates.CALCULATING
                     else:
                         self.startup(LEVELS[self.curr_level])
                         self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
@@ -160,10 +188,17 @@ class Game:
                 if is_key_pressed(KEY_SPACE):
                     self.startup(LEVELS[self.curr_level])
                     self.game_state = GameStates.GAME
-            case GameStates.END:
-                pass
-                
-        
+            case GameStates.CALCULATING:
+                self.loading_bar.width += 1
+                if self.loading_bar.width > 370:
+                    if self.win:
+                        self.game_state = GameStates.WIN
+                    else:
+                        self.game_state = GameStates.LOSE
+            case GameStates.WIN | GameStates.LOSE:
+                if is_key_pressed(KeyboardKey.KEY_SPACE):
+                    self.reset()
+
     def check_debug(self):
         if is_key_pressed(KEY_I):
             self.debug = not self.debug
@@ -230,10 +265,18 @@ class Game:
                 draw_texture_pro(self.level_complete, self.splash_src, self.screen_size, (0,0), 0, WHITE)
                 draw_text(f"{self.curr_evidence} Blood Bags", 265, 280, 40, RED)
                 draw_text(f"{self.curr_time:.2f} Seconds", 265, 415, 40, WHITE)
+            case GameStates.CALCULATING:
+                draw_texture_pro(self.calculating, self.splash_src, self.screen_size, (0,0), 0, WHITE)
+                draw_rectangle_rec(self.loading_bar, GREEN)
+            case GameStates.WIN:
+                draw_texture_pro(self.caught, self.splash_src, self.screen_size, (0,0), 0, WHITE)
+                draw_text(f"{self.total_evidence} Blood Bags", 265, 255, 40, RED)
+                draw_text(f"{self.total_time:.2f} Seconds", 265, 355, 40, WHITE)
+            case GameStates.LOSE:
+                draw_texture_pro(self.escaped, self.splash_src, self.screen_size, (0,0), 0, WHITE)
+                draw_text(f"{self.total_evidence} Blood Bags", 265, 255, 40, RED)
+                draw_text(f"{self.total_time:.2f} Seconds", 265, 355, 40, WHITE)
 
-            case GameStates.END:
-                draw_text(f"evidence collected: {self.curr_evidence}", 200, 200, 30, WHITE)
-                draw_text(f"it took you {self.total_time:.2f} seconds to finish", 200, 300, 30, WHITE)
 
     def draw(self):
         match self.game_state:
