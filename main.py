@@ -5,10 +5,15 @@ from settings import *
 if __name__ == '__main__':  
 
   init_window(SCREEN_WIDTH, SCREEN_HEIGHT, "Compete Clean")
+  init_audio_device() 
   set_target_fps(120)
+  music = load_music_stream(GAME_MUSIC)
+  play_music_stream(music)
   current_game = Game()
 
   while not window_should_close():
+    update_music_stream(music)
+
 
     current_game.update()
 
@@ -25,4 +30,6 @@ if __name__ == '__main__':
 
     end_drawing()
 
+unload_music_stream(music)
+close_audio_device()
 close_window()

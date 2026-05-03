@@ -45,6 +45,8 @@ CAUGHT = str(THIS_DIR/"assets/caught.png")
 DEFEAT = str(THIS_DIR/"assets/defeat.png")
 FLAG = str(THIS_DIR/"assets/flag.png")
 INSTRUCTIONS = str(THIS_DIR/"assets/instructions.png")
+GAME_MUSIC = str(THIS_DIR/"assets/game_music.mp3")
+
 
 
 
