@@ -83,7 +83,7 @@ class Game:
                 if tile_value == TILE_SPIKE:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
-                    self.spike_rects.append(Rectangle(x, y, TILE_SIZE, SPIKE_TIP_HEIGHT))
+                    self.spike_rects.append(Rectangle(x, y + TILE_SIZE - SPIKE_TIP_HEIGHT, TILE_SIZE, SPIKE_TIP_HEIGHT))
 
 
         self.track_texture = load_texture(TRACK_GROUND)
@@ -309,8 +309,9 @@ class Game:
 
     def draw_debug(self):
         if self.debug:
-            draw_text(f"Grounded: {self.player.grounded}", int(self.player.position.x),
-                       int(self.player.position.y - 100), 20, PINK)
+            draw_text(f"Grounded: {self.player.grounded}", int(self.player.position.x), int(self.player.position.y - 100), 20, PINK)
+            for rect in self.spike_rects:
+                draw_rectangle_lines(int(rect.x), int(rect.y), int(rect.width), int(rect.height), RED)
     
     def draw_screens(self):
         match self.game_state:
