@@ -50,6 +50,7 @@ class Game:
         self.caught = load_texture(CAUGHT)
         self.escaped = load_texture(ESCAPED)
         self.defeat = load_texture(DEFEAT)
+        self.flag = load_texture(FLAG)
 
 
     def startup(self, level):
@@ -95,11 +96,13 @@ class Game:
 
     def item_player_collision(self):
         for item in self.weight.arr:
-            if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12), item.radius, self.player.bounding_box):
+            if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12),
+                                           item.radius, self.player.bounding_box):
                 if item.active: self.player.strength += 100
                 item.active = False
         for item in self.blood.arr:
-            if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12), item.radius, self.player.bounding_box):
+            if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12),
+                                           item.radius, self.player.bounding_box):
                 if item.active: self.curr_evidence += 1
                 item.active = False
         hit_javelin = None
@@ -175,6 +178,8 @@ class Game:
         self.curr_level += 1
         self.weight.arr = []
         self.blood.arr = []
+        self.enemies = []
+        self.javelins = []
         self.win_tiles = []
         self.spike_rects = []
         self.player.strength = 0
@@ -304,7 +309,8 @@ class Game:
 
     def draw_debug(self):
         if self.debug:
-            draw_text(f"Grounded: {self.player.grounded}", int(self.player.position.x), int(self.player.position.y - 100), 20, PINK)
+            draw_text(f"Grounded: {self.player.grounded}", int(self.player.position.x),
+                       int(self.player.position.y - 100), 20, PINK)
     
     def draw_screens(self):
         match self.game_state:
@@ -334,6 +340,9 @@ class Game:
         match self.game_state:
             case GameStates.GAME:
                 self.draw_level(LEVELS[self.curr_level])
+                draw_texture_pro(self.flag, Rectangle(0,0,self.flag.width,self.flag.height)
+                                 ,Rectangle(WORLD_WIDTH-130,WORLD_HEIGHT-123,100,100),(0,0),0,WHITE)
+
                 self.player.draw(self.debug)
                 for enemy in self.enemies:
                     enemy.draw()
@@ -342,6 +351,7 @@ class Game:
                 self.blood.draw()
                 self.weight.draw()
                 self.draw_debug()
+
             
     def shutdown(self):
         self.player.shutdown()

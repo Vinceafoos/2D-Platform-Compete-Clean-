@@ -24,7 +24,9 @@ class Player():
         self.player_texture = load_texture(SHEET)
         self.player_frame = self.state.frame()
         self.player_direction = Direction.RIGHT
-        self.bounding_box = Rectangle(self.position.x + PLAYER_HITBOX_X_OFFSET, self.position.y + PLAYER_HITBOX_Y_OFFSET, PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT)
+        self.bounding_box = Rectangle(self.position.x + PLAYER_HITBOX_X_OFFSET,
+                                       self.position.y + PLAYER_HITBOX_Y_OFFSET,
+                                         PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT)
         self.strength = 0
         self.health = 3
         self.on_sand = False
@@ -105,7 +107,8 @@ class Player():
                 self.velocity.y /= 2
             self.grounded = False
 
-        if is_key_down(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT) and not self.on_sand and self.strength > 0:
+        if is_key_down(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(
+            KEY_RIGHT) and not self.on_sand and self.strength > 0:
             if self.state.row != State.CHARGE:
                 self.transition(State.CHARGE)
             if self.jump_vel > -800 - self.strength:
@@ -113,7 +116,8 @@ class Player():
             else:
                 print("jump maxed")
 
-        if is_key_released(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(KEY_RIGHT) and not self.on_sand and self.strength > 0:
+        if is_key_released(KEY_DOWN) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(
+            KEY_RIGHT) and not self.on_sand and self.strength > 0:
             self.transition(State.JUMP)
             self.grounded = False
             self.velocity.y = self.jump_vel
@@ -145,7 +149,8 @@ class Player():
 
         self.state.update(frame_time)
         self.player_frame = self.state.frame()
-        if (self.player_frame.width < 0 and self.player_direction > 0) or (self.player_frame.width > 0 and self.player_direction < 0):
+        if (self.player_frame.width < 0 and self.player_direction > 0)or (self.player_frame.width
+                                                                 > 0 and self.player_direction < 0):
             self.player_frame.width *= -1
 
 
@@ -196,12 +201,15 @@ class Player():
             draw_texture_pro(
                 self.player_texture,
                 self.player_frame,
-                Rectangle(self.position.x , self.position.y, PLAYER_BOUNDING_BOX_WIDTH , PLAYER_BOUNDING_BOX_HEIGHT),
+                Rectangle(self.position.x , self.position.y,
+                           PLAYER_BOUNDING_BOX_WIDTH , PLAYER_BOUNDING_BOX_HEIGHT),
                 Vector2(0, 0), 0.0, WHITE,
             )
         if debug:
-            draw_rectangle_lines(int(self.position.x + PLAYER_HITBOX_X_OFFSET), int(self.position.y + PLAYER_HITBOX_Y_OFFSET), PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, RED)
-            draw_text(f"jump velo: {self.jump_vel}", int(self.position.x), int(self.position.y-60), 20, RED)
+            draw_rectangle_lines(int(self.position.x + PLAYER_HITBOX_X_OFFSET),
+                                  int(self.position.y + PLAYER_HITBOX_Y_OFFSET), PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, RED)
+            draw_text(f"jump velo: {self.jump_vel}", int(self.position.x),
+                       int(self.position.y-60), 20, RED)
             draw_text(f"anim: {self.state.cur}", int(self.position.x), int(self.position.y-30), 20, RED)
 
 

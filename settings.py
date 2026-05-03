@@ -43,6 +43,8 @@ CALCULATING = str(THIS_DIR/"assets/calculating.png")
 ESCAPED = str(THIS_DIR/"assets/escaped.png")
 CAUGHT = str(THIS_DIR/"assets/caught.png")
 DEFEAT = str(THIS_DIR/"assets/defeat.png")
+FLAG = str(THIS_DIR/"assets/flag.png")
+
 
 
 WEIGHT_SHEET_TILE_WIDTH = 40
@@ -63,6 +65,7 @@ TILE_SPIKE = 14
 TILE_BLOOD = 6
 TILE_WIN = 7
 TILE_THROWER = 21
+TILE_FLAG = 15
 
 
 def load_level_from_csv(filename):
