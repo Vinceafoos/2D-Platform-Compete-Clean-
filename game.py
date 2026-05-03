@@ -392,7 +392,7 @@ class Game:
                     draw_rectangle(int(self.camera.target.x - self.camera.offset.x),
                                     int(self.camera.target.y - self.camera.offset.y),
                                     SCREEN_WIDTH,SCREEN_HEIGHT,self.pause_white)
-                    draw_text(f"GAME PAUSED", 155, int(self.camera.target.y), 70, RED)
+                    draw_text(f"GAME PAUSED", int(self.camera.target.x) - 250, int(self.camera.target.y), 70, RED)
 
             
     def shutdown(self):
