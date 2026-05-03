@@ -24,7 +24,7 @@ PLAYER_HITBOX_X_OFFSET = 5
 PLAYER_HITBOX_Y_OFFSET = 2   
 PLAYER_HITBOX_WIDTH = 20     
 PLAYER_HITBOX_HEIGHT = 36    
-SPIKE_TIP_HEIGHT = 16       
+SPIKE_TIP_HEIGHT = 12      
 
 THIS_DIR = Path(__file__).resolve().parent
 SHEET = str(THIS_DIR/"assets/wada_spritesheet.png")

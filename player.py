@@ -164,7 +164,7 @@ class Player():
                 if row < 0 or row >= TILE_ROWS or col < 0 or col >= TILE_COLS:
                     continue
                 
-                if (level[row][col] >= 10 and level[row][col] != TILE_SPIKE) or level[row][col] == TILE_SOLID:
+                if (level[row][col] >= 10 and level[row][col] != TILE_SPIKE and level[row][col] != TILE_THROWER) or level[row][col] == TILE_SOLID:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
                     if check_collision_recs(player_rect, tile_rect):
