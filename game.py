@@ -58,6 +58,9 @@ class Game:
         self.paused_at = 0
         self.unpaused_at = 0
         self.instructions = load_texture(INSTRUCTIONS)
+        self.weight_sound = load_sound(WEIGHT_SOUND)
+        self.blood_sound = load_sound(BLOOD_SOUND)
+
 
 
 
@@ -109,12 +112,16 @@ class Game:
         for item in self.weight.arr:
             if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12),
                                            item.radius, self.player.bounding_box):
-                if item.active: self.player.strength += 100
+                if item.active: 
+                    self.player.strength += 100
+                    play_sound(self.weight_sound)
                 item.active = False
         for item in self.blood.arr:
             if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12),
                                            item.radius, self.player.bounding_box):
-                if item.active: self.curr_evidence += 1
+                if item.active: 
+                    self.curr_evidence += 1
+                    play_sound(self.blood_sound)
                 item.active = False
         hit_javelin = None
         for javelin in self.javelins:
