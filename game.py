@@ -57,6 +57,8 @@ class Game:
         self.pause_seconds = 0
         self.paused_at = 0
         self.unpaused_at = 0
+        self.instructions = load_texture(INSTRUCTIONS)
+
 
 
 
@@ -238,7 +240,6 @@ class Game:
                 if(is_key_pressed(KeyboardKey.KEY_P)):
                     self.handle_pausing()
                 if not self.pause:
-                    print(self.curr_level_evidence)
                     self.curr_time = get_time() - self.start_time - self.pause_seconds
                     self.item_player_collision()
                     self.player.update(LEVELS[self.curr_level])
@@ -267,6 +268,9 @@ class Game:
                         self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
                         self.game_state = GameStates.GAME
             case GameStates.SPLASH:
+                if is_key_pressed(KEY_SPACE):
+                    self.game_state = GameStates.INSTRUCTIONS
+            case GameStates.INSTRUCTIONS:
                 if is_key_pressed(KEY_SPACE):
                     self.startup(LEVELS[self.curr_level])
                     self.game_state = GameStates.GAME
@@ -356,6 +360,8 @@ class Game:
         match self.game_state:
             case GameStates.SPLASH:
                 draw_texture_pro(self.splash, self.splash_src, self.screen_size, (0,0), 0, WHITE)
+            case GameStates.INSTRUCTIONS:
+                draw_texture_pro(self.instructions, self.splash_src, self.screen_size, (0,0), 0, WHITE)
             case GameStates.IN_BETWEEN:
                 draw_texture_pro(self.level_complete, self.splash_src, self.screen_size, (0,0), 0, WHITE)
                 draw_text(f"{self.curr_evidence} Blood Bags", 265, 280, 40, RED)
