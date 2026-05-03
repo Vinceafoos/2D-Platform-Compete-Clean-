@@ -77,7 +77,7 @@ class Game:
     def item_player_collision(self):
         for item in self.weight.arr:
             if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12), item.radius, self.player.bounding_box):
-                if item.active: self.player.strength += 200
+                if item.active: self.player.strength += 100
                 item.active = False
         for item in self.blood.arr:
             if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12), item.radius, self.player.bounding_box):
@@ -94,6 +94,8 @@ class Game:
         for rec in self.win_tiles:
             if check_collision_recs(self.player.bounding_box, rec):
                 self.game_state = GameStates.IN_BETWEEN
+                self.enemies.clear()
+                self.javelins.clear()
         if self.debug:
             if is_key_pressed(KeyboardKey.KEY_N):
                 self.game_state = GameStates.IN_BETWEEN
@@ -216,13 +218,12 @@ class Game:
 
     def draw_debug(self):
         if self.debug:
-            draw_text(f"Grounded: {self.player.grounded}", 200, 200, 20, PINK)
+            draw_text(f"Grounded: {self.player.grounded}", int(self.player.position.x), int(self.player.position.y - 100), 20, PINK)
     
     def draw_screens(self):
         match self.game_state:
             case GameStates.SPLASH:
                 draw_texture_pro(self.splash, self.splash_src, self.screen_size, (0,0), 0, WHITE)
-                #draw_text("SPLASH, space to play", 200, 200, 40, RED)
             case GameStates.IN_BETWEEN:
                 draw_texture_pro(self.level_complete, self.splash_src, self.screen_size, (0,0), 0, WHITE)
                 draw_text(f"{self.curr_evidence} Blood Bags", 265, 280, 40, RED)

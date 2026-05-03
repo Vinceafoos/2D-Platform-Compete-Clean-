@@ -63,11 +63,12 @@ class Player():
                 self.state.type = AnimationType.ONESHOT
                 self.state.duration = 0.3
             case State.CHARGE:
+                time_to_charge = ((((-self.jump_vel + self.strength) + self.jump_vel)/120)/2) / 4
                 self.state.row = State.CHARGE
                 self.state.sprites_in_row = 4
                 self.state.type = AnimationType.ONESHOT
-                self.state.duration = .5
-                self.state.duration_left = .5
+                self.state.duration = time_to_charge
+                self.state.duration_left = time_to_charge
         self.state.last = self.state.sprites_in_row - 1
 
     def update(self, level):
@@ -195,6 +196,8 @@ class Player():
         )
         if debug:
             draw_rectangle_lines(int(self.position.x + PLAYER_HITBOX_X_OFFSET), int(self.position.y + PLAYER_HITBOX_Y_OFFSET), PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, RED)
+            draw_text(f"jump velo: {self.jump_vel}", int(self.position.x), int(self.position.y-60), 20, RED)
+            draw_text(f"anim: {self.state.cur}", int(self.position.x), int(self.position.y-30), 20, RED)
 
 
     def shutdown(self):
