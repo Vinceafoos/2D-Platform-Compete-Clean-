@@ -83,7 +83,8 @@ class Game:
                 if tile_value == TILE_SPIKE:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
-                    self.spike_rects.append(Rectangle(x, y + TILE_SIZE - SPIKE_TIP_HEIGHT, TILE_SIZE, SPIKE_TIP_HEIGHT))
+                    spike_x_pad = 4
+                    self.spike_rects.append(Rectangle(x + spike_x_pad, y + TILE_SIZE - SPIKE_TIP_HEIGHT, TILE_SIZE - spike_x_pad * 2, SPIKE_TIP_HEIGHT))
 
 
         self.track_texture = load_texture(TRACK_GROUND)
@@ -114,6 +115,7 @@ class Game:
                     hit_javelin = javelin
                     break
         if hit_javelin:
+            hit_javelin.shutdown()
             self.javelins.remove(hit_javelin)
         if self.player.invincible_timer <= 0:
             for spike_rect in self.spike_rects:
@@ -151,7 +153,9 @@ class Game:
             if self.out_of_bounds(jav):
                 to_remove.append(jav)
             elif self.hits_solid(jav, level):
-                jav.stick()
+                to_remove.append(jav)
+        for jav in to_remove:
+            jav.shutdown()
         self.javelins = [j for j in self.javelins if j not in to_remove]
 
     def calculate_win(self):
@@ -300,7 +304,7 @@ class Game:
                             draw_texture(self.spike_texture,x,y, WHITE)
 
     def draw_hud(self):
-        draw_texture(self.background_texture, 0, 0, LIGHTGRAY)
+        #draw_texture(self.background_texture, 0, 0, LIGHTGRAY)
         draw_rectangle(0,0,TILE_COLS * TILE_SIZE,30, WHITE)
         draw_text(f"Evidence Collected: {self.curr_evidence}", 5,5,20, BLACK)
         draw_text(f"Strength: {self.player.strength}", 280,5,20, BLACK)
