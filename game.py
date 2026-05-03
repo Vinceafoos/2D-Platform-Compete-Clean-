@@ -17,6 +17,7 @@ class GameStates:
     INSTRUCTIONS = 5
     IN_BETWEEN = 6
     CALCULATING = 7
+    DEFEAT = 8
 
 
 class Game:
@@ -47,6 +48,7 @@ class Game:
         self.loading_bar = Rectangle(215,400,0,30)
         self.caught = load_texture(CAUGHT)
         self.escaped = load_texture(ESCAPED)
+        self.defeat = load_texture(DEFEAT)
 
 
     def startup(self, level):
@@ -136,6 +138,18 @@ class Game:
         percent = self.total_evidence / self.num_evidence
         if random.random() < percent:
             self.win = True
+
+    def restart_level(self):
+        self.curr_evidence = 0
+        self.weight.arr = []
+        self.blood.arr = []
+        self.win_tiles = []
+        self.enemies = []
+        self.javelins = []
+        self.player.strength = 0
+        self.player.health = 3
+        self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
+
     
     def next_level(self):
         self.total_evidence += self.curr_evidence
@@ -145,6 +159,7 @@ class Game:
         self.blood.arr = []
         self.win_tiles = []
         self.player.strength = 0
+        self.player.health = 3
         self.total_time += self.curr_time
 
     def reset(self):
@@ -154,6 +169,7 @@ class Game:
         self.num_evidence = 0
         self.win = False
         self.curr_level = 0
+        self.player.health = 3
         self.game_state = GameStates.SPLASH
 
 
@@ -174,6 +190,8 @@ class Game:
                 self.check_debug()
                 self.weight.update()
                 self.check_win()
+                if self.player.health < 1:
+                    self.game_state = GameStates.DEFEAT
             case GameStates.IN_BETWEEN:
                 if is_key_pressed(KEY_SPACE):
                     self.next_level()
@@ -198,6 +216,16 @@ class Game:
             case GameStates.WIN | GameStates.LOSE:
                 if is_key_pressed(KeyboardKey.KEY_SPACE):
                     self.reset()
+            case GameStates.DEFEAT:
+                if is_key_pressed(KeyboardKey.KEY_SPACE):
+                    self.restart_level()
+                    self.startup(LEVELS[self.curr_level])
+                    self.game_state = GameStates.GAME
+                if is_key_pressed(KeyboardKey.KEY_ENTER):
+                    self.next_level()
+                    self.reset()
+                    self.game_state = GameStates.SPLASH
+
 
     def check_debug(self):
         if is_key_pressed(KEY_I):
@@ -276,6 +304,9 @@ class Game:
                 draw_texture_pro(self.escaped, self.splash_src, self.screen_size, (0,0), 0, WHITE)
                 draw_text(f"{self.total_evidence} Blood Bags", 265, 255, 40, RED)
                 draw_text(f"{self.total_time:.2f} Seconds", 265, 355, 40, WHITE)
+            case GameStates.DEFEAT:
+                draw_texture_pro(self.defeat, self.splash_src, self.screen_size, (0,0), 0, WHITE)
+
 
 
     def draw(self):

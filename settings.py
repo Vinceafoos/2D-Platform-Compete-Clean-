@@ -40,6 +40,7 @@ BACKGROUND = str(THIS_DIR/"assets/complete_clean_background.png")
 CALCULATING = str(THIS_DIR/"assets/calculating.png")
 ESCAPED = str(THIS_DIR/"assets/escaped.png")
 CAUGHT = str(THIS_DIR/"assets/caught.png")
+DEFEAT = str(THIS_DIR/"assets/defeat.png")
 
 
 WEIGHT_SHEET_TILE_WIDTH = 40
