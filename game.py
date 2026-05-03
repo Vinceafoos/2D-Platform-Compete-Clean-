@@ -37,6 +37,7 @@ class Game:
         self.curr_level = 0
         self.javelins = []
         self.enemies = []
+        self.spike_rects = []
         self.total_time = 0
         self.splash = load_texture(SPLASH)
         self.splash_src = Rectangle(0,0,self.splash.width,self.splash.height)
@@ -78,11 +79,17 @@ class Game:
                     x = col * TILE_SIZE
                     y = row * TILE_SIZE
                     self.enemies.append(Thrower(Vector2(x,y)))
+                if tile_value == TILE_SPIKE:
+                    x = col * TILE_SIZE
+                    y = row * TILE_SIZE
+                    self.spike_rects.append(Rectangle(x, y, TILE_SIZE, SPIKE_TIP_HEIGHT))
+
 
         self.track_texture = load_texture(TRACK_GROUND)
         self.stone_texture = load_texture(STONE_GROUND)
         self.sand_texture = load_texture(SAND_GROUND)
         self.dirt_texture = load_texture(DIRT_GROUND)
+        self.spike_texture = load_texture(SPIKES)
         self.background_texture = load_texture(BACKGROUND)
 
 
@@ -95,13 +102,23 @@ class Game:
             if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12), item.radius, self.player.bounding_box):
                 if item.active: self.curr_evidence += 1
                 item.active = False
+        hit_javelin = None
         for javelin in self.javelins:
             if check_collision_circle_rec(javelin.tip(), javelin.tip_radius, self.player.bounding_box):
-                if javelin.active:
+                if javelin.active and self.player.invincible_timer <= 0:
                     self.player.health -= 1
-                    javelin.active = False
-                    self.javelins.pop()
-        
+                    self.player.invincible_timer = 1.5
+                    hit_javelin = javelin
+                    break
+        if hit_javelin:
+            self.javelins.remove(hit_javelin)
+        if self.player.invincible_timer <= 0:
+            for spike_rect in self.spike_rects:
+                if check_collision_recs(self.player.bounding_box, spike_rect):
+                    self.player.health -= 1
+                    self.player.invincible_timer = 1.5
+                    break
+
     def check_win(self):
         for rec in self.win_tiles:
             if check_collision_recs(self.player.bounding_box, rec):
@@ -146,6 +163,7 @@ class Game:
         self.win_tiles = []
         self.enemies = []
         self.javelins = []
+        self.spike_rects = []
         self.player.strength = 0
         self.player.health = 3
         self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
@@ -158,6 +176,7 @@ class Game:
         self.weight.arr = []
         self.blood.arr = []
         self.win_tiles = []
+        self.spike_rects = []
         self.player.strength = 0
         self.player.health = 3
         self.total_time += self.curr_time
@@ -272,6 +291,8 @@ class Game:
                             draw_texture(self.dirt_texture,x,y, WHITE)
                         case 1:
                             draw_texture(self.dirt_texture, x, y, WHITE)
+                        case 14:
+                            draw_texture(self.spike_texture,x,y, WHITE)
 
     def draw_hud(self):
         draw_texture(self.background_texture, 0, 0, LIGHTGRAY)
@@ -332,3 +353,4 @@ class Game:
         unload_texture(STONE_GROUND)
         unload_texture(SAND_GROUND)
         unload_texture(DIRT_GROUND)
+        unload_texture(SPIKES)

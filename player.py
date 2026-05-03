@@ -28,6 +28,7 @@ class Player():
         self.strength = 0
         self.health = 3
         self.on_sand = False
+        self.invincible_timer = 0.0
 
     def get_rect(self):
         return (
@@ -120,6 +121,9 @@ class Player():
         elif is_key_down(KEY_LEFT) or is_key_down(KEY_RIGHT):
             self.jump_vel = JUMP_VELOCITY
 
+        if self.invincible_timer > 0:
+            self.invincible_timer -= frame_time
+
         self.velocity.y += self.gravity * frame_time
         self.position.y += self.velocity.y * frame_time
         self.bounding_box.y = self.position.y + PLAYER_HITBOX_Y_OFFSET
@@ -160,7 +164,7 @@ class Player():
                 if row < 0 or row >= TILE_ROWS or col < 0 or col >= TILE_COLS:
                     continue
                 
-                if level[row][col] >= 10 or level[row][col] == TILE_SOLID:
+                if (level[row][col] >= 10 and level[row][col] != TILE_SPIKE) or level[row][col] == TILE_SOLID:
                     tile_rect = (col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE, TILE_SIZE)
                     
                     if check_collision_recs(player_rect, tile_rect):
@@ -188,12 +192,13 @@ class Player():
                         player_rect = self.get_rect() # Update rect after resolution
 
     def draw(self, debug):
-        draw_texture_pro(
-            self.player_texture,
-            self.player_frame,
-            Rectangle(self.position.x , self.position.y, PLAYER_BOUNDING_BOX_WIDTH , PLAYER_BOUNDING_BOX_HEIGHT),
-            Vector2(0, 0), 0.0, WHITE,
-        )
+        if self.invincible_timer <= 0 or int(self.invincible_timer * 10) % 2 == 0:
+            draw_texture_pro(
+                self.player_texture,
+                self.player_frame,
+                Rectangle(self.position.x , self.position.y, PLAYER_BOUNDING_BOX_WIDTH , PLAYER_BOUNDING_BOX_HEIGHT),
+                Vector2(0, 0), 0.0, WHITE,
+            )
         if debug:
             draw_rectangle_lines(int(self.position.x + PLAYER_HITBOX_X_OFFSET), int(self.position.y + PLAYER_HITBOX_Y_OFFSET), PLAYER_HITBOX_WIDTH, PLAYER_HITBOX_HEIGHT, RED)
             draw_text(f"jump velo: {self.jump_vel}", int(self.position.x), int(self.position.y-60), 20, RED)
