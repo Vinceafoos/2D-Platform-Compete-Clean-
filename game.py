@@ -66,7 +66,7 @@ class Game:
         for x_start in [SCREEN_WIDTH * 0.1, SCREEN_WIDTH * 0.35,
                         SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.85]:
             self._try_spawn_cloud(x_override=x_start)
-        hud_icon_size = 22
+        hud_icon_size = 25
         heart_img = load_image(HEART_SPRITE)
         image_resize(heart_img, hud_icon_size, hud_icon_size)
         self.hud_heart = load_texture_from_image(heart_img)
