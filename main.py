@@ -20,6 +20,7 @@ if __name__ == '__main__':
     begin_drawing()
     clear_background(SKYBLUE)
     if current_game.game_state == GameStates.GAME:
+      current_game.draw_clouds()
       current_game.draw_hud()
     else:
       current_game.draw_screens()

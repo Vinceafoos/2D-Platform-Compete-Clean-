@@ -58,6 +58,14 @@ class Game:
         self.paused_at = 0
         self.unpaused_at = 0
         self.instructions = load_texture(INSTRUCTIONS)
+        self.cloud_textures = [load_texture(p) for p in CLOUD_SPRITES]
+        self.cloud_sizes = [(t.width, t.height) for t in self.cloud_textures]
+        self.clouds = []
+        self.cloud_spawn_timer = 0.0
+        self.cloud_spawn_interval = 4.0
+        for x_start in [SCREEN_WIDTH * 0.1, SCREEN_WIDTH * 0.35,
+                        SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.85]:
+            self._try_spawn_cloud(x_override=x_start)
         self.weight_sound = load_sound(WEIGHT_SOUND)
         self.blood_sound = load_sound(BLOOD_SOUND)
         self.track_texture = load_texture(TRACK_GROUND)
@@ -248,6 +256,7 @@ class Game:
                     for javelin in self.javelins:
                         javelin.update()
                     self.jav_world_collisions(LEVELS[self.curr_level])
+                    self.update_clouds()
                     self.update_camera()
                     self.check_debug()
                     self.weight.update()
@@ -340,6 +349,39 @@ class Game:
                             draw_texture(self.dirt_texture, x, y, WHITE)
                         case 14:
                             draw_texture(self.spike_texture,x,y, WHITE)
+
+    def _cloud_x(self, c):
+        return c['start_x'] + c['speed'] * (get_time() - c['start_time'])
+
+    def _try_spawn_cloud(self, x_override=None):
+        if len(self.clouds) >= 5:
+            return
+        idx = random.randrange(len(self.cloud_textures))
+        w, h = self.cloud_sizes[idx]
+        x = float(x_override) if x_override is not None else -float(w)
+        y = random.uniform(35, 300)
+        for c in self.clouds:
+            cx = self._cloud_x(c)
+            if (x < cx + c['w'] + 15 and x + w + 15 > cx and
+                    y < c['y'] + c['h'] + 10 and y + h + 10 > c['y']):
+                return
+        self.clouds.append({'start_x': x, 'start_time': get_time(),
+                            'y': y, 'idx': idx, 'w': w, 'h': h,
+                            'speed': random.uniform(8, 15)})
+
+    def update_clouds(self):
+        t = get_time()
+        self.clouds = [c for c in self.clouds
+                       if c['start_x'] + c['speed'] * (t - c['start_time']) < SCREEN_WIDTH + 10]
+        self.cloud_spawn_timer += get_frame_time()
+        if self.cloud_spawn_timer >= self.cloud_spawn_interval:
+            self._try_spawn_cloud()
+            self.cloud_spawn_timer = 0.0
+            self.cloud_spawn_interval = random.uniform(3.5, 5.0)
+
+    def draw_clouds(self):
+        for c in self.clouds:
+            draw_texture_v(self.cloud_textures[c['idx']], Vector2(self._cloud_x(c), c['y']), WHITE)
 
     def draw_hud(self):
         #draw_texture(self.background_texture, 0, 0, LIGHTGRAY)

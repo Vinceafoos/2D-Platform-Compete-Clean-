@@ -44,6 +44,13 @@ ESCAPED = str(THIS_DIR/"assets/escaped.png")
 CAUGHT = str(THIS_DIR/"assets/caught.png")
 DEFEAT = str(THIS_DIR/"assets/defeat.png")
 FLAG = str(THIS_DIR/"assets/flag.png")
+CLOUD_SPRITES = [
+    str(THIS_DIR/"assets/cloud.png"),
+    str(THIS_DIR/"assets/cloud2.png"),
+    str(THIS_DIR/"assets/cloud3.png"),
+    str(THIS_DIR/"assets/cloud4.png"),
+    str(THIS_DIR/"assets/cloud5.png"),
+]
 INSTRUCTIONS = str(THIS_DIR/"assets/instructions.png")
 GAME_MUSIC = str(THIS_DIR/"assets/game_music.mp3")
 WEIGHT_SOUND = str(THIS_DIR/"assets/weight_sound.mp3")
