@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
     begin_drawing()
     clear_background(BLACK)
-    draw_rectangle_gradient_v(0,   0, SCREEN_WIDTH, 240, Color(10,  20,  70,  255), Color(60, 110, 180, 255))
+    draw_rectangle_gradient_v(0,   0, SCREEN_WIDTH, 240, Color(40,  70, 130,  255), Color(60, 110, 180, 255))
     draw_rectangle_gradient_v(0, 240, SCREEN_WIDTH, 360, Color(60, 110, 180, 255), Color(120, 145, 165, 255))
     if current_game.game_state == GameStates.GAME:
       current_game.draw_clouds()

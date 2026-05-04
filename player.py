@@ -114,8 +114,6 @@ class Player():
                 self.transition(State.CHARGE)
             if self.jump_vel > -800 - self.strength:
                 self.jump_vel -= 2
-            else:
-                print("jump maxed")
 
         if (is_key_released(KEY_DOWN) or is_key_released(KeyboardKey.KEY_LEFT_SHIFT)) and self.grounded and not is_key_down(KEY_LEFT) and not is_key_down(
             KEY_RIGHT) and not self.on_sand and self.strength > 0:
@@ -182,9 +180,18 @@ class Player():
                                 self.position.x = tile_rect[0] - PLAYER_HITBOX_X_OFFSET - PLAYER_HITBOX_WIDTH
                             elif self.velocity.x < 0:
                                 self.position.x = tile_rect[0] + TILE_SIZE - PLAYER_HITBOX_X_OFFSET
+                            else:
+                                #for wind
+                                player_cx = self.position.x + PLAYER_HITBOX_X_OFFSET + PLAYER_HITBOX_WIDTH / 2
+                                tile_cx = tile_rect[0] + TILE_SIZE / 2
+                                if player_cx > tile_cx:
+                                    self.position.x = tile_rect[0] + TILE_SIZE - PLAYER_HITBOX_X_OFFSET
+                                else:
+                                    self.position.x = tile_rect[0] - PLAYER_HITBOX_X_OFFSET - PLAYER_HITBOX_WIDTH
+                            self.bounding_box.x = self.position.x + PLAYER_HITBOX_X_OFFSET
 
                         elif axis == 'Y':
-                            if self.velocity.y >= 0.0: # Falling (Hitting Ground)
+                            if self.velocity.y >= 0.0: 
                                 self.position.y = tile_rect[1] - PLAYER_HITBOX_Y_OFFSET - PLAYER_HITBOX_HEIGHT
                                 self.grounded = True 
                                 self.velocity.y = 0.0 
@@ -193,11 +200,11 @@ class Player():
                                 else:
                                     self.on_sand = False
 
-                            elif self.velocity.y < 0.0: # Jumping (Hitting Ceiling)
+                            elif self.velocity.y < 0.0:
                                 self.position.y = tile_rect[1] + TILE_SIZE
                                 self.velocity.y = 0.0 
                             
-                        player_rect = self.get_rect() # Update rect after resolution
+                        player_rect = self.get_rect() 
 
     def draw(self, debug):
         if self.invincible_timer <= 0 or int(self.invincible_timer * 10) % 2 == 0:

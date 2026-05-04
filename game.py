@@ -85,6 +85,11 @@ class Game:
         self.popups = []
         self.shake_timer = 0.0
         self.evidence_flash_timer = 0.0
+        self.windy = False
+        self.wind_force = 0.0
+        self.wind_change_timer = 0.0
+        self.wind_change_interval = 0.0
+        self.death_count = 0
         self.weight_sound = load_sound(WEIGHT_SOUND)
         self.blood_sound = load_sound(BLOOD_SOUND)
         self.track_texture = load_texture(TRACK_GROUND)
@@ -100,6 +105,13 @@ class Game:
         names = ["Level 1", "Level 2", "Level 3"]
         self.level_name = names[self.curr_level] if self.curr_level < len(names) else f"Level {self.curr_level + 1}"
         self.level_name_timer = 2.0
+        self.windy = random.random() < 0.2
+        if self.windy:
+            self.wind_force = random.choice([-45, 45])
+            self.wind_change_interval = random.uniform(5.0, 12.0)
+            self.wind_change_timer = 0.0
+        else:
+            self.wind_force = 0.0
         self.camera.target = Vector2(self.player.position.x, self.player.position.y)
         self.camera.offset = Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
         self.camera.rotation = 0.0
@@ -211,11 +223,7 @@ class Game:
 
     def calculate_win(self):
         percent = self.cum_evidence / self.total_evidence
-        print(self.cum_evidence)
-        print(self.total_evidence)
-        print(percent)
         x = random.random()
-        print(x)
         if x < percent:
             self.win = True
 
@@ -232,6 +240,11 @@ class Game:
         self.player.strength = 0
         self.player.health = 3
         self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
+        self.player.velocity = Vector2(0, 0)
+        self.player.grounded = True
+        self.player.on_sand = False
+        self.player.invincible_timer = 0.0
+        self.player.jump_vel = JUMP_VELOCITY
         self.shake_timer = 0.0
         self.evidence_flash_timer = 0.0
         self.popups = []
@@ -261,6 +274,7 @@ class Game:
         self.total_evidence = 0
         self.win = False
         self.curr_level = 0
+        self.death_count = 0
         self.game_state = GameStates.SPLASH
         self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
 
@@ -282,7 +296,15 @@ class Game:
                     self.handle_pausing()
                 self.update_plane()
                 if not self.pause:
+                    dt = get_frame_time()
                     self.curr_time = get_time() - self.start_time - self.pause_seconds
+                    if self.windy:
+                        self.wind_change_timer += dt
+                        if self.wind_change_timer >= self.wind_change_interval:
+                            self.wind_force = random.choice([-45, -30, 30, 45])
+                            self.wind_change_interval = random.uniform(5.0, 12.0)
+                            self.wind_change_timer = 0.0
+                        self.player.position.x += self.wind_force * dt
                     self.item_player_collision()
                     self.player.update(LEVELS[self.curr_level])
                     for enemy in self.enemies:
@@ -294,7 +316,6 @@ class Game:
                     self.jav_world_collisions(LEVELS[self.curr_level])
                     self.update_clouds()
                     self.update_camera()
-                    dt = get_frame_time()
                     self.level_name_timer = max(0.0, self.level_name_timer - dt)
                     self.shake_timer = max(0.0, self.shake_timer - dt)
                     self.evidence_flash_timer = max(0.0, self.evidence_flash_timer - dt)
@@ -306,6 +327,7 @@ class Game:
                     self.weight.update()
                     self.check_win()
                     if self.player.health < 1:
+                        self.death_count += 1
                         self.game_state = GameStates.DEFEAT
     
             case GameStates.IN_BETWEEN:
@@ -464,22 +486,39 @@ class Game:
     def draw_hud(self):
         s = self.hud_icon_size
         y = 6
-        fs = 18
         for i in range(self.player.health):
             draw_texture(self.hud_heart, 270 + i * (s + 4), y, WHITE)
 
         blood_tint = Color(255, 255, 100, 255) if self.evidence_flash_timer > 0 else WHITE
         draw_texture(self.hud_blood, 360, y, blood_tint)
-        self.shadow(f"x{self.curr_evidence}", 386, y + 3, fs, WHITE)
-        self.shadow(f"STR: {self.player.strength}", 442, y + 3, fs, WHITE)
-        self.shadow(f"{self.curr_time:.2f}s", SCREEN_WIDTH - 80, y + 3, fs, WHITE)
+        self.shadow(f"x{self.curr_evidence}", 386, y + 3, 18, WHITE)
+        self.shadow(f"STR: {self.player.strength}", 442, y + 3, 18, WHITE)
+        self.shadow(f"{self.curr_time:.2f}s", SCREEN_WIDTH - 80, y + 3, 18, WHITE)
+        if self.windy:
+            strong = abs(self.wind_force) >= 40
+            if self.wind_force < 0:
+                if strong:
+                    arrow = "<< WIND" 
+                else:
+                    arrow = "< WIND"
+            else:
+                if strong:
+                    arrow = "WIND >>" 
+                else:
+                    arrow = "WIND >"
+            tw = measure_text(arrow, 18)
+            self.shadow(arrow, (SCREEN_WIDTH - tw) // 2, 38, 18, Color(180, 220, 255, 255))
 
         if self.level_name_timer > 0:
             fade = int(min(255, self.level_name_timer * 200))
-            fs_big = 48
-            tw = measure_text(self.level_name, fs_big)
-            draw_text(self.level_name, (SCREEN_WIDTH - tw) // 2 + 2, SCREEN_HEIGHT // 2 - 22, fs_big, Color(0, 0, 0, fade))
-            draw_text(self.level_name, (SCREEN_WIDTH - tw) // 2,     SCREEN_HEIGHT // 2 - 24, fs_big, Color(255, 255, 255, fade))
+            tw = measure_text(self.level_name, 48)
+            draw_text(self.level_name, (SCREEN_WIDTH - tw) // 2 + 2, SCREEN_HEIGHT // 2 - 22, 48, Color(0, 0, 0, fade))
+            draw_text(self.level_name, (SCREEN_WIDTH - tw) // 2,     SCREEN_HEIGHT // 2 - 24, 48, Color(255, 255, 255, fade))
+            if self.windy:
+                wind_msg = "It seems to be a windy day..."
+                ww = measure_text(wind_msg, 22)
+                draw_text(wind_msg, (SCREEN_WIDTH - ww) // 2 + 2, SCREEN_HEIGHT // 2 + 36, 22, Color(0, 0, 0, fade))
+                draw_text(wind_msg, (SCREEN_WIDTH - ww) // 2,     SCREEN_HEIGHT // 2 + 34, 22, Color(180, 220, 255, fade))
 
     def draw_debug(self):
         if self.debug:
@@ -504,10 +543,12 @@ class Game:
                 draw_texture_pro(self.caught, self.splash_src, self.screen_size, (0,0), 0, WHITE)
                 draw_text(f"{self.cum_evidence} Blood Bags", 265, 255, 40, RED)
                 draw_text(f"{self.total_time:.2f} Seconds", 265, 355, 40, WHITE)
+                draw_text(f"Deaths: {self.death_count}", 265, 440, 30, WHITE)
             case GameStates.LOSE:
                 draw_texture_pro(self.escaped, self.splash_src, self.screen_size, (0,0), 0, WHITE)
                 draw_text(f"{self.cum_evidence} Blood Bags", 265, 255, 40, RED)
                 draw_text(f"{self.total_time:.2f} Seconds", 265, 355, 40, WHITE)
+                draw_text(f"Deaths: {self.death_count}", 265, 440, 30, WHITE)
             case GameStates.DEFEAT:
                 draw_texture_pro(self.defeat, self.splash_src, self.screen_size, (0,0), 0, WHITE)
 
@@ -548,11 +589,18 @@ class Game:
         unload_texture(self.dirt_texture)
         unload_texture(self.spike_texture)
         unload_texture(self.splash)
+        unload_texture(self.level_complete)
         unload_texture(self.calculating)
         unload_texture(self.caught)
         unload_texture(self.escaped)
         unload_texture(self.defeat)
         unload_texture(self.flag)
         unload_texture(self.instructions)
+        unload_texture(self.plane_texture)
+        unload_texture(self.hud_heart)
+        unload_texture(self.hud_blood)
+        unload_texture(self.background_texture)
+        for tex in self.cloud_textures:
+            unload_texture(tex)
         unload_sound(self.weight_sound)
         unload_sound(self.blood_sound)

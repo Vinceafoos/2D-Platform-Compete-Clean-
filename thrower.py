@@ -18,7 +18,6 @@ class Thrower(Enemy):
         self.size = Vector2(PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT)
         self.alive = True
         self.can_shoot = True
-        self.texture = load_texture(SHEET)
         self.total_time = 0
         self.state = State.IDLE
         self.player_direction = Direction.LEFT
@@ -48,11 +47,9 @@ class Thrower(Enemy):
 
     def update(self):
         dt = get_frame_time()
-        #every 3 seconds throw
-        self.total_time +=1
-        if self.total_time %120 ==0:
-            print(f"ticks:{self.total_time}, current:{self.animation.cur}")
-        if self.total_time % 360 == 0:
+        self.total_time += dt
+        if self.total_time >= 3.0:
+            self.total_time = 0.0
             self.transition(State.THROW)
         
         if self.state == State.THROW and self.animation.cur == 2: 
