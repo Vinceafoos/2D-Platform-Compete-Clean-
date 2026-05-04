@@ -107,7 +107,7 @@ class Game:
         self.level_name_timer = 2.0
         self.windy = random.random() < 0.2
         if self.windy:
-            self.wind_force = random.choice([-45, 45])
+            self.wind_force = random.choice([-40, 40])
             self.wind_change_interval = random.uniform(5.0, 12.0)
             self.wind_change_timer = 0.0
         else:
@@ -301,8 +301,8 @@ class Game:
                     if self.windy:
                         self.wind_change_timer += dt
                         if self.wind_change_timer >= self.wind_change_interval:
-                            self.wind_force = random.choice([-45, -30, 30, 45])
-                            self.wind_change_interval = random.uniform(5.0, 12.0)
+                            self.wind_force = random.choice([-40, -25, 25, 40])
+                            self.wind_change_interval = random.uniform(5.0, 15.0)
                             self.wind_change_timer = 0.0
                         self.player.position.x += self.wind_force * dt
                     self.item_player_collision()
