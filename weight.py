@@ -8,6 +8,7 @@ class Weight():
         self.arr = []
         self.radius = 10
         self.active = True
+        self.dest_rec = Rectangle(0,0,TILE_SIZE, TILE_SIZE)
         self.startup()
 
     def startup(self):
@@ -33,10 +34,12 @@ class Weight():
     def draw(self):
         for item in self.arr:
             if item.active:
+                self.dest_rec.x = item.position.x
+                self.dest_rec.y = item.position.y
                 draw_texture_pro(
                     self.texture,
                     self.frame,
-                    Rectangle(int(item.position.x), int(item.position.y), TILE_SIZE, TILE_SIZE),
-                    Vector2(0,0), 0.0, WHITE
+                    self.dest_rec,
+                    (0,0), 0.0, WHITE
                 )
                 #draw_circle(int(item.position.x + 14), int(item.position.y + 12), self.radius, GRAY)

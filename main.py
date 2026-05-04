@@ -32,4 +32,5 @@ if __name__ == '__main__':
 
 unload_music_stream(music)
 close_audio_device()
+current_game.shutdown()
 close_window()

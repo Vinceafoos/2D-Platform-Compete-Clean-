@@ -60,10 +60,12 @@ class Game:
         self.instructions = load_texture(INSTRUCTIONS)
         self.weight_sound = load_sound(WEIGHT_SOUND)
         self.blood_sound = load_sound(BLOOD_SOUND)
-
-
-
-
+        self.track_texture = load_texture(TRACK_GROUND)
+        self.stone_texture = load_texture(STONE_GROUND)
+        self.sand_texture = load_texture(SAND_GROUND)
+        self.dirt_texture = load_texture(DIRT_GROUND)
+        self.spike_texture = load_texture(SPIKES)
+        self.background_texture = load_texture(BACKGROUND)
 
 
     def startup(self, level):
@@ -100,24 +102,16 @@ class Game:
                     self.spike_rects.append(Rectangle(x + spike_x_pad, y + TILE_SIZE - SPIKE_TIP_HEIGHT, TILE_SIZE - spike_x_pad * 2, SPIKE_TIP_HEIGHT))
 
 
-        self.track_texture = load_texture(TRACK_GROUND)
-        self.stone_texture = load_texture(STONE_GROUND)
-        self.sand_texture = load_texture(SAND_GROUND)
-        self.dirt_texture = load_texture(DIRT_GROUND)
-        self.spike_texture = load_texture(SPIKES)
-        self.background_texture = load_texture(BACKGROUND)
-
-
     def item_player_collision(self):
         for item in self.weight.arr:
-            if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12),
+            if check_collision_circle_rec((item.position.x + 14,item.position.y + 12),
                                            item.radius, self.player.bounding_box):
                 if item.active: 
                     self.player.strength += 100
                     play_sound(self.weight_sound)
                 item.active = False
         for item in self.blood.arr:
-            if check_collision_circle_rec(Vector2(item.position.x + 14,item.position.y + 12),
+            if check_collision_circle_rec((item.position.x + 14,item.position.y + 12),
                                            item.radius, self.player.bounding_box):
                 if item.active: 
                     self.curr_evidence += 1
@@ -222,10 +216,8 @@ class Game:
         self.total_time = 0
         self.cum_evidence = 0
         self.total_evidence = 0
-        self.curr_level_evidence = 0
         self.win = False
         self.curr_level = 0
-        self.player.health = 3
         self.game_state = GameStates.SPLASH
         self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
 
@@ -239,7 +231,6 @@ class Game:
         else:
             self.resume_timer()
         self.pause = not self.pause
-
 
     def update(self):
         match self.game_state:
@@ -414,8 +405,17 @@ class Game:
             enemy.shutdown()
         for javelin in self.javelins:
             javelin.shutdown()
-        unload_texture(TRACK_GROUND)
-        unload_texture(STONE_GROUND)
-        unload_texture(SAND_GROUND)
-        unload_texture(DIRT_GROUND)
-        unload_texture(SPIKES)
+        unload_texture(self.track_texture)
+        unload_texture(self.stone_texture)
+        unload_texture(self.sand_texture)
+        unload_texture(self.dirt_texture)
+        unload_texture(self.spike_texture)
+        unload_texture(self.splash)
+        unload_texture(self.calculating)
+        unload_texture(self.caught)
+        unload_texture(self.escaped)
+        unload_texture(self.defeat)
+        unload_texture(self.flag)
+        unload_texture(self.instructions)
+        unload_sound(self.weight_sound)
+        unload_sound(self.blood_sound)
