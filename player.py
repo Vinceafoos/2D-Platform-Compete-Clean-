@@ -101,7 +101,7 @@ class Player():
 
         self.handle_tile_collision(level, 'X')
 
-        if self.grounded and is_key_pressed(KeyboardKey.KEY_UP):
+        if self.grounded and (is_key_pressed(KeyboardKey.KEY_UP) or is_key_pressed(KeyboardKey.KEY_SPACE)):
             self.transition(State.JUMP)
             self.velocity.y = self.jump_vel
             if self.on_sand:

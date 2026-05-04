@@ -180,7 +180,12 @@ class Game:
     def hits_solid(self, jav, level):
             col = int(jav.position.x // TILE_SIZE)
             row = int(jav.position.y // TILE_SIZE)
-            return level[row][col] == TILE_SOLID or level[row][col] >= 10
+            tile = level[row][col]
+            if tile == TILE_THROWER:
+                return False
+            if tile == TILE_SPIKE:
+                return jav.position.y >= row * TILE_SIZE + TILE_SIZE - SPIKE_TIP_HEIGHT
+            return tile == TILE_SOLID or tile >= 10
 
     def out_of_bounds(self, jav):
             col = int(jav.position.x // TILE_SIZE)
