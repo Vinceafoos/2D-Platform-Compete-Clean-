@@ -88,6 +88,7 @@ class Game:
         self.wind_force = 0.0
         self.wind_change_timer = 0.0
         self.wind_change_interval = 0.0
+        self.wind_particles = []
         self.weight_sound = load_sound(WEIGHT_SOUND)
         self.blood_sound = load_sound(BLOOD_SOUND)
         self.track_texture = load_texture(TRACK_GROUND)
@@ -296,6 +297,33 @@ class Game:
             self.resume_timer()
         self.pause = not self.pause
 
+    def handle_wind(self, dt):
+        if self.windy:
+            self.wind_change_timer += dt
+            if self.wind_change_timer >= self.wind_change_interval:
+                self.wind_force = random.choice([-40, -25, 25, 40])
+                self.wind_change_interval = random.uniform(5.0, 15.0)
+                self.wind_change_timer = 0.0
+            self.player.position.x += self.wind_force * dt
+            while len(self.wind_particles) < 18:
+                self.wind_particles.append({
+                    'x': random.uniform(0, SCREEN_WIDTH),
+                    'y': random.uniform(0, SCREEN_HEIGHT),
+                    'length': random.randint(6, 18),
+                    'alpha': random.randint(60, 150),
+                    'speed_mult': random.uniform(1.5, 3.0),
+                })
+            for p in self.wind_particles:
+                p['x'] += self.wind_force * p['speed_mult'] * dt
+                if self.wind_force > 0 and p['x'] > SCREEN_WIDTH + 20:
+                    p['x'] = -20.0
+                    p['y'] = random.uniform(0, SCREEN_HEIGHT)
+                elif self.wind_force < 0 and p['x'] < -20:
+                    p['x'] = SCREEN_WIDTH + 20.0
+                    p['y'] = random.uniform(0, SCREEN_HEIGHT)
+        else:
+            self.wind_particles = []
+
     def update(self):
         match self.game_state:
             case GameStates.GAME:
@@ -305,13 +333,7 @@ class Game:
                 if not self.pause:
                     dt = get_frame_time()
                     self.curr_time = get_time() - self.start_time - self.pause_seconds
-                    if self.windy:
-                        self.wind_change_timer += dt
-                        if self.wind_change_timer >= self.wind_change_interval:
-                            self.wind_force = random.choice([-40, -25, 25, 40])
-                            self.wind_change_interval = random.uniform(5.0, 15.0)
-                            self.wind_change_timer = 0.0
-                        self.player.position.x += self.wind_force * dt
+                    self.handle_wind(dt)
                     self.item_player_collision()
                     self.player.update(LEVELS[self.curr_level])
                     for enemy in self.enemies:
@@ -484,6 +506,11 @@ class Game:
     def draw_clouds(self):
         for c in self.clouds:
             draw_texture_v(self.cloud_textures[c['idx']], Vector2(self._cloud_x(c), c['y']), WHITE)
+        if self.windy:
+            for p in self.wind_particles:
+                x1 = int(p['x'])
+                x2 = int(p['x'] + (p['length'] if self.wind_force >= 0 else -p['length']))
+                draw_line(x1, int(p['y']), x2, int(p['y']), Color(200, 230, 255, int(p['alpha'])))
 
     def shadow(self, text, x, y, size, color):
         draw_text(text, x+2, y+2, size, Color(0,0,0,170))
@@ -499,7 +526,13 @@ class Game:
         draw_texture(self.hud_blood, 360, y, blood_tint)
         self.shadow(f"x{self.curr_evidence}", 386, y + 3, 18, WHITE)
         self.shadow(f"STR: {self.player.strength}", 442, y + 3, 18, WHITE)
-        self.shadow(f"{self.curr_time:.2f}s", SCREEN_WIDTH - 80, y + 3, 18, WHITE)
+        if self.curr_time >= 120:
+            timer_color = Color(255, 80, 80, 255)
+        elif self.curr_time >= 60:
+            timer_color = Color(255, 220, 0, 255)
+        else:
+            timer_color = WHITE
+        self.shadow(f"{self.curr_time:.2f}s", SCREEN_WIDTH - 80, y + 3, 18, timer_color)
         if self.windy:
             strong = abs(self.wind_force) >= 40
             if self.wind_force < 0:
