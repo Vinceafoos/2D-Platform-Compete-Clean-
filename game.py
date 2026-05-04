@@ -66,6 +66,16 @@ class Game:
         for x_start in [SCREEN_WIDTH * 0.1, SCREEN_WIDTH * 0.35,
                         SCREEN_WIDTH * 0.6, SCREEN_WIDTH * 0.85]:
             self._try_spawn_cloud(x_override=x_start)
+        hud_icon_size = 22
+        heart_img = load_image(HEART_SPRITE)
+        image_resize(heart_img, hud_icon_size, hud_icon_size)
+        self.hud_heart = load_texture_from_image(heart_img)
+        unload_image(heart_img)
+        blood_img = load_image(BLOOD_BAG_HUD)
+        image_resize(blood_img, hud_icon_size, hud_icon_size)
+        self.hud_blood = load_texture_from_image(blood_img)
+        unload_image(blood_img)
+        self.hud_icon_size = hud_icon_size
         self.weight_sound = load_sound(WEIGHT_SOUND)
         self.blood_sound = load_sound(BLOOD_SOUND)
         self.track_texture = load_texture(TRACK_GROUND)
@@ -383,13 +393,21 @@ class Game:
         for c in self.clouds:
             draw_texture_v(self.cloud_textures[c['idx']], Vector2(self._cloud_x(c), c['y']), WHITE)
 
+    def shadow(self, text, x, y, size, color):
+        draw_text(text, x+2, y+2, size, Color(0,0,0,170))
+        draw_text(text, x, y, size, color)
+        
     def draw_hud(self):
-        #draw_texture(self.background_texture, 0, 0, LIGHTGRAY)
-        draw_rectangle(0,0,TILE_COLS * TILE_SIZE,30, RAYWHITE)
-        draw_text(f"Evidence Collected: {self.curr_evidence}", 5,5,20, BLACK)
-        draw_text(f"Strength: {self.player.strength}", 280,5,20, BLACK)
-        draw_text(f"Health: {self.player.health}", 470, 5, 20, BLACK)
-        draw_text(f"Current Time: {self.curr_time:.2f}", 600,5,20, BLACK)
+        s = self.hud_icon_size
+        y = 6
+        fs = 18
+        for i in range(self.player.health):
+            draw_texture(self.hud_heart, 270 + i * (s + 4), y, WHITE)
+
+        draw_texture(self.hud_blood, 360, y, WHITE)
+        self.shadow(f"x{self.curr_evidence}", 386, y + 3, fs, WHITE)
+        self.shadow(f"STR: {self.player.strength}", 442, y + 3, fs, WHITE)
+        self.shadow(f"{self.curr_time:.2f}s", SCREEN_WIDTH - 80, y + 3, fs, WHITE)
 
     def draw_debug(self):
         if self.debug:
