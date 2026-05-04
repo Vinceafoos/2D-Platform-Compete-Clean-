@@ -23,7 +23,6 @@ class GameStates:
 class Game:
     def __init__(self):
         self.player = Player()
-        self.enemy = Enemy(Vector2(0,0))
         self.camera = Camera2D()
         self.weight = Weight(0,0)
         self.blood = Blood(0,0)
@@ -264,6 +263,11 @@ class Game:
         self.spike_rects = []
         self.player.strength = 0
         self.player.health = 3
+        self.player.velocity = Vector2(0, 0)
+        self.player.grounded = True
+        self.player.on_sand = False
+        self.player.invincible_timer = 1.5
+        self.player.jump_vel = JUMP_VELOCITY
         self.total_time += self.curr_time
 
     def reset(self):
@@ -275,6 +279,11 @@ class Game:
         self.curr_level = 0
         self.game_state = GameStates.SPLASH
         self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
+        self.player.velocity = Vector2(0, 0)
+        self.player.grounded = True
+        self.player.on_sand = False
+        self.player.invincible_timer = 0.0
+        self.player.jump_vel = JUMP_VELOCITY
 
     def resume_timer(self):
         self.unpaused_at = get_time()
