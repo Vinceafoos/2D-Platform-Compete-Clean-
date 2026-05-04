@@ -15,10 +15,18 @@ For our art style we took some general inspiration from Kirby's Adventure which 
 
 ---
 
+## Technical Details
+-
+
+## Art Details
+- All of our textures for the player, enemy, items, and tiles were generated using Gemini, and then edited to fit what we wanted better. Here is an example prompt: 
+
+- All of our screens (splash, instructions, win/lose/in between) were generated using ChatGPT. We did this by giving Chat our wada_spritesheet.png so it could use our general theme, and then a prompt along these lines: "Generate a splash screen for a 2d platformer called Compete Clean. Attatched is a sprite sheet of our main character and some other sprites, feel free to gain reference from them. Write "Press Space to Play" on the screen. The game is about catching an athlete who is doping and bringing justice to the sport, so the background should be something like a track arena."
+
 ## Concept
 
 ### Gameplay Overview
-The player controls a WADA agent navigating through three levels, attempting to collect enough evidence within a specified time limit.
+The player controls a WADA agent navigating through three levels, attempting to collect enough evidence.
 
 ### Theme Interpretation
 
@@ -26,7 +34,7 @@ The player controls a WADA agent navigating through three levels, attempting to 
 The narrative unfolds through different gameplay actions, which serve as the primary storytelling device:
 - Navigating hazards (javelin throwers, spike traps, sand pits)
 - Performing precise and high jumps
-- Racing against a time limit to gather evidence
+- Trying to gather evidence
 All of these actions help drive the story of the game on. 
 
 Each obstacle represents resistance, not all realistic to the world, but still symbolic of the difficulty when uncovering truth in a system that is known to resist exposure. As the player progresses through levels, the intensity increases, creating narrative escalation.
@@ -39,6 +47,13 @@ Visually, Compete Clean uses a retro, pixel art style, forming a light and appro
 
 ---
 
+## Credits/Reference
+- Outside of any AI resources cited above in the art section, here are our sources:
+-   Game Music (game_music.mp3): 8-bit-Fantasy. "8 Bit Fantasy Level 007." _8 Bit Fantasy Music_, Soundcloud, 2025, https://soundcloud.com/ravenala/8-bit-fantasy-level-007
+-   Blood pickup sound (blood_pickup.mp3): danhelbling (Freesound), "Object Drops In Water." Pixabay, 2022, https://pixabay.com/sound-effects/film-special-effects-object-drops-in-water-84639/
+-   Weight pickup sound (weight_sound.mp3): RossBell (Freesound), "Tea Cup Clank." Pixabay, 2022, https://pixabay.com/sound-effects/film-special-effects-tea-cup-clank-80001/
+-   Heart image (heart.png): 6 Pixel Heart (PNG Transparent), https://www.onlygfx.com/6-pixel-heart-png-transparent/
+
 ## Mechanics
 
 ### Primary Mechanics
@@ -47,12 +62,14 @@ Visually, Compete Clean uses a retro, pixel art style, forming a light and appro
 | Movement | The player can traverse the level by moving left and right. | ![walking](md_assets/walking.png) |
 | Jump | By pressing space the player can jump over obstacles, or onto higher surfaces. | ![jumping](md_assets/jump.png) |
 | Charge Jump | By holding down the down key, the player can charge their jump to reach higher locations.  | ![charging](md_assets/charge_jump.png) |
-| Wind | There is a 1/5 chance of a windy day each level, which effects player movement. | ![wind](md_assets/wind.png) |
+| Weights |  The player can pick up weight items which will increase their max Charge Jump ability. | ![weight item](md_assets/weight.png) |
+| Blood bags |  The player can pick up blood bags which is how you test the athlete at the end. The more collected the better chance of a succesful test. | ![blood bag](assets/blood_bag.png) |
+
 
 ### Secondary Mechanics
 | Mechanic| Description | Image |
 |---|---|---|
 | Javelin Thrower |  The player will have to avoid javelins being thrown in their direction as they complete the mission. | ![jav thrower](md_assets/jav_thrower.png) |
-| Spike | Some doped up track spikes have gotten loose, and the player must avoid them to not take damage. | ![spike](md_assets/spike.png) |
-| Sand Trap |  Slows player movement | ![sand pit](md_assets/sand_pit.png) |
-| Weights |  The player can pick up weight items which will increase their max High Jump ability. | ![weight item](md_assets/weight.png) |
+| Spike | Some track spikes have been littered throughout the journey, avoid them to not take damage | ![spikes](assets/spikes.png) |
+| Sand Trap |  Slows player movement and decreases jump height | ![sand](assets/sand.png) |
+| Wind | There is a 1/5 chance of a windy day each level, which effects player movement. | ![wind](md_assets/wind.png) |
