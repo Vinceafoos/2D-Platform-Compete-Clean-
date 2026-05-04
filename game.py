@@ -242,7 +242,7 @@ class Game:
         self.player.velocity = Vector2(0, 0)
         self.player.grounded = True
         self.player.on_sand = False
-        self.player.invincible_timer = 0.0
+        self.player.invincible_timer = 1.5
         self.player.jump_vel = JUMP_VELOCITY
         self.shake_timer = 0.0
         self.evidence_flash_timer = 0.0
