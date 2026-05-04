@@ -76,6 +76,11 @@ class Game:
         self.hud_blood = load_texture_from_image(blood_img)
         unload_image(blood_img)
         self.hud_icon_size = hud_icon_size
+        self.level_name = ""
+        self.level_name_timer = 0.0
+        self.popups = []
+        self.shake_timer = 0.0
+        self.evidence_flash_timer = 0.0
         self.weight_sound = load_sound(WEIGHT_SOUND)
         self.blood_sound = load_sound(BLOOD_SOUND)
         self.track_texture = load_texture(TRACK_GROUND)
@@ -88,6 +93,9 @@ class Game:
 
     def startup(self, level):
         self.start_time = get_time()
+        names = ["Level 1", "Level 2", "Level 3"]
+        self.level_name = names[self.curr_level] if self.curr_level < len(names) else f"Level {self.curr_level + 1}"
+        self.level_name_timer = 2.0
         self.camera.target = Vector2(self.player.position.x, self.player.position.y)
         self.camera.offset = Vector2(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
         self.camera.rotation = 0.0
@@ -124,16 +132,19 @@ class Game:
         for item in self.weight.arr:
             if check_collision_circle_rec((item.position.x + 14,item.position.y + 12),
                                            item.radius, self.player.bounding_box):
-                if item.active: 
+                if item.active:
                     self.player.strength += 100
                     play_sound(self.weight_sound)
+                    self.popups.append({'x': item.position.x + 14, 'y': item.position.y, 'timer': 1.2, 'text': '+100', 'color': (255, 255, 255)})
                 item.active = False
         for item in self.blood.arr:
             if check_collision_circle_rec((item.position.x + 14,item.position.y + 12),
                                            item.radius, self.player.bounding_box):
-                if item.active: 
+                if item.active:
                     self.curr_evidence += 1
                     play_sound(self.blood_sound)
+                    self.popups.append({'x': item.position.x + 14, 'y': item.position.y, 'timer': 1.2, 'text': '+1', 'color': (255, 80, 80)})
+                    self.evidence_flash_timer = 0.3
                 item.active = False
         hit_javelin = None
         for javelin in self.javelins:
@@ -141,6 +152,7 @@ class Game:
                 if javelin.active and self.player.invincible_timer <= 0:
                     self.player.health -= 1
                     self.player.invincible_timer = 1.5
+                    self._on_damage()
                     hit_javelin = javelin
                     break
         if hit_javelin:
@@ -151,6 +163,7 @@ class Game:
                 if check_collision_recs(self.player.bounding_box, spike_rect):
                     self.player.health -= 1
                     self.player.invincible_timer = 1.5
+                    self._on_damage()
                     break
 
     def check_win(self):
@@ -210,6 +223,9 @@ class Game:
         self.player.strength = 0
         self.player.health = 3
         self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
+        self.shake_timer = 0.0
+        self.evidence_flash_timer = 0.0
+        self.popups = []
 
     
     def next_level(self):
@@ -268,6 +284,14 @@ class Game:
                     self.jav_world_collisions(LEVELS[self.curr_level])
                     self.update_clouds()
                     self.update_camera()
+                    dt = get_frame_time()
+                    self.level_name_timer = max(0.0, self.level_name_timer - dt)
+                    self.shake_timer = max(0.0, self.shake_timer - dt)
+                    self.evidence_flash_timer = max(0.0, self.evidence_flash_timer - dt)
+                    for p in self.popups:
+                        p['y'] -= 50 * dt
+                        p['timer'] -= dt
+                    self.popups = [p for p in self.popups if p['timer'] > 0]
                     self.check_debug()
                     self.weight.update()
                     self.check_win()
@@ -337,6 +361,9 @@ class Game:
         
         self.camera.offset.x = SCREEN_WIDTH / 2
         self.camera.offset.y = SCREEN_HEIGHT / 2
+        if self.shake_timer > 0:
+            self.camera.offset.x += random.randint(-5, 5)
+            self.camera.offset.y += random.randint(-5, 5)
 
     def draw_level(self, level):
         """Draws the solid tiles of the level map."""
@@ -359,6 +386,11 @@ class Game:
                             draw_texture(self.dirt_texture, x, y, WHITE)
                         case 14:
                             draw_texture(self.spike_texture,x,y, WHITE)
+
+    def _on_damage(self):
+        self.shake_timer = 0.3
+        self.popups.append({'x': self.player.position.x, 'y': self.player.position.y - 10,
+                            'timer': 1.2, 'text': '-1', 'color': (255, 30, 30)})
 
     def _cloud_x(self, c):
         return c['start_x'] + c['speed'] * (get_time() - c['start_time'])
@@ -404,10 +436,18 @@ class Game:
         for i in range(self.player.health):
             draw_texture(self.hud_heart, 270 + i * (s + 4), y, WHITE)
 
-        draw_texture(self.hud_blood, 360, y, WHITE)
+        blood_tint = Color(255, 255, 100, 255) if self.evidence_flash_timer > 0 else WHITE
+        draw_texture(self.hud_blood, 360, y, blood_tint)
         self.shadow(f"x{self.curr_evidence}", 386, y + 3, fs, WHITE)
         self.shadow(f"STR: {self.player.strength}", 442, y + 3, fs, WHITE)
         self.shadow(f"{self.curr_time:.2f}s", SCREEN_WIDTH - 80, y + 3, fs, WHITE)
+
+        if self.level_name_timer > 0:
+            fade = int(min(255, self.level_name_timer * 200))
+            fs_big = 48
+            tw = measure_text(self.level_name, fs_big)
+            draw_text(self.level_name, (SCREEN_WIDTH - tw) // 2 + 2, SCREEN_HEIGHT // 2 - 22, fs_big, Color(0, 0, 0, fade))
+            draw_text(self.level_name, (SCREEN_WIDTH - tw) // 2,     SCREEN_HEIGHT // 2 - 24, fs_big, Color(255, 255, 255, fade))
 
     def draw_debug(self):
         if self.debug:
@@ -453,6 +493,10 @@ class Game:
                 self.blood.draw()
                 self.weight.draw()
                 self.draw_debug()
+                for p in self.popups:
+                    fade = int((p['timer'] / 1.2) * 255)
+                    r, g, b = p['color']
+                    draw_text(p['text'], int(p['x']), int(p['y']), 20, Color(r, g, b, fade))
                 if self.pause:
                     draw_rectangle(int(self.camera.target.x - self.camera.offset.x),
                                     int(self.camera.target.y - self.camera.offset.y),
