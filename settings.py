@@ -53,6 +53,7 @@ CLOUD_SPRITES = [
 ]
 INSTRUCTIONS = str(THIS_DIR/"assets/instructions.png")
 HEART_SPRITE = str(THIS_DIR/"assets/heart.png")
+PLANE_SPRITE = str(THIS_DIR/"assets/plane.png")
 BLOOD_BAG_HUD = str(THIS_DIR/"assets/blood_bag.png")
 GAME_MUSIC = str(THIS_DIR/"assets/game_music.mp3")
 WEIGHT_SOUND = str(THIS_DIR/"assets/weight_sound.mp3")

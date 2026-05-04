@@ -50,7 +50,7 @@ class Javelin:
 
     def draw(self, debug=False):
         if self.stuck_angle != None:
-            angle = self.stuck_angle 
+            angle = self.stuck_angle
         else:
             angle = math.degrees(math.atan2(self.velocity.y, self.velocity.x))
         w = self.texture.width

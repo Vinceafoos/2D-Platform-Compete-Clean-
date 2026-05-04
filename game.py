@@ -58,6 +58,10 @@ class Game:
         self.paused_at = 0
         self.unpaused_at = 0
         self.instructions = load_texture(INSTRUCTIONS)
+        self.plane_texture = load_texture(PLANE_SPRITE)
+        self.plane = None
+        self.plane_spawn_timer = 0.0
+        self.plane_spawn_interval = random.uniform(15.0, 35.0)
         self.cloud_textures = [load_texture(p) for p in CLOUD_SPRITES]
         self.cloud_sizes = [(t.width, t.height) for t in self.cloud_textures]
         self.clouds = []
@@ -276,6 +280,7 @@ class Game:
             case GameStates.GAME:
                 if(is_key_pressed(KeyboardKey.KEY_P)):
                     self.handle_pausing()
+                self.update_plane()
                 if not self.pause:
                     self.curr_time = get_time() - self.start_time - self.pause_seconds
                     self.item_player_collision()
@@ -396,6 +401,28 @@ class Game:
         self.shake_timer = 0.3
         self.popups.append({'x': self.player.position.x, 'y': self.player.position.y - 10,
                             'timer': 1.2, 'text': '-1', 'color': (255, 30, 30)})
+
+    def update_plane(self):
+        dt = get_frame_time()
+        if self.plane is not None:
+            x = self.plane['start_x'] + self.plane['speed'] * (get_time() - self.plane['start_time'])
+            if x < -float(self.plane_texture.width):
+                self.plane = None
+        self.plane_spawn_timer += dt
+        if self.plane is None and self.plane_spawn_timer >= self.plane_spawn_interval:
+            self.plane = {
+                'start_x': float(SCREEN_WIDTH),
+                'start_time': get_time(),
+                'y': random.uniform(35, 150),
+                'speed': random.uniform(-130, -80),
+            }
+            self.plane_spawn_timer = 0.0
+            self.plane_spawn_interval = random.uniform(15.0, 35.0)
+
+    def draw_plane(self):
+        if self.plane is not None:
+            x = self.plane['start_x'] + self.plane['speed'] * (get_time() - self.plane['start_time'])
+            draw_texture_v(self.plane_texture, Vector2(x, self.plane['y']), WHITE)
 
     def _cloud_x(self, c):
         return c['start_x'] + c['speed'] * (get_time() - c['start_time'])
