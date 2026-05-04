@@ -89,7 +89,6 @@ class Game:
         self.wind_force = 0.0
         self.wind_change_timer = 0.0
         self.wind_change_interval = 0.0
-        self.death_count = 0
         self.weight_sound = load_sound(WEIGHT_SOUND)
         self.blood_sound = load_sound(BLOOD_SOUND)
         self.track_texture = load_texture(TRACK_GROUND)
@@ -274,7 +273,6 @@ class Game:
         self.total_evidence = 0
         self.win = False
         self.curr_level = 0
-        self.death_count = 0
         self.game_state = GameStates.SPLASH
         self.player.position = Vector2(SCREEN_WIDTH/4, SCREEN_HEIGHT)
 
@@ -327,7 +325,6 @@ class Game:
                     self.weight.update()
                     self.check_win()
                     if self.player.health < 1:
-                        self.death_count += 1
                         self.game_state = GameStates.DEFEAT
     
             case GameStates.IN_BETWEEN:
@@ -543,12 +540,10 @@ class Game:
                 draw_texture_pro(self.caught, self.splash_src, self.screen_size, (0,0), 0, WHITE)
                 draw_text(f"{self.cum_evidence} Blood Bags", 265, 255, 40, RED)
                 draw_text(f"{self.total_time:.2f} Seconds", 265, 355, 40, WHITE)
-                draw_text(f"Deaths: {self.death_count}", 265, 440, 30, WHITE)
             case GameStates.LOSE:
                 draw_texture_pro(self.escaped, self.splash_src, self.screen_size, (0,0), 0, WHITE)
                 draw_text(f"{self.cum_evidence} Blood Bags", 265, 255, 40, RED)
                 draw_text(f"{self.total_time:.2f} Seconds", 265, 355, 40, WHITE)
-                draw_text(f"Deaths: {self.death_count}", 265, 440, 30, WHITE)
             case GameStates.DEFEAT:
                 draw_texture_pro(self.defeat, self.splash_src, self.screen_size, (0,0), 0, WHITE)
 
