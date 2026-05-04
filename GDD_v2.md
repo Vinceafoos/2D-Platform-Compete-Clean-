@@ -17,7 +17,12 @@ For our art style we took some general inspiration from Kirby's Adventure which 
 
 ## Technical Details
 -
+-
+-
+-
 
+### Debug Mode
+- Our debug mode shows lots of useful features like the player hitbox, javelin hitbox, spike hitbox, and stats like jump velocity, animation frame, and our grounded boolean. The most useful feature though is when in debug mode, if you click "N" you will skip whichever level you are on and bring you to the next one. 
 ## Art Details
 - All of our textures for the player, enemy, items, and tiles were generated using Gemini, and then edited to fit what we wanted better. Here is an example prompt: 
 
