@@ -22,6 +22,7 @@ class Thrower(Enemy):
         self.total_time = 0
         self.state = State.IDLE
         self.player_direction = Direction.LEFT
+        self.dest_rec = Rectangle(self.position.x, self.position.y, TILE_SIZE, TILE_SIZE)
 
 
         self.startup()
@@ -87,10 +88,9 @@ class Thrower(Enemy):
         draw_texture_pro(
             self.texture,
             self.frame,
-            Rectangle(self.position.x, self.position.y, TILE_SIZE, TILE_SIZE),
+            self.dest_rec,
             (0,0), 0.0, WHITE
         )
-        
 
     def shutdown(self):
         unload_texture(self.texture)

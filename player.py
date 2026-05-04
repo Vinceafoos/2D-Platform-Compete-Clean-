@@ -31,6 +31,7 @@ class Player():
         self.health = 3
         self.on_sand = False
         self.invincible_timer = 0.0
+        self.player_dest_rec = Rectangle(0,0,PLAYER_BOUNDING_BOX_WIDTH, PLAYER_BOUNDING_BOX_HEIGHT)
 
     def get_rect(self):
         return (
@@ -153,6 +154,8 @@ class Player():
                                                                  > 0 and self.player_direction < 0):
             self.player_frame.width *= -1
 
+        self.player_dest_rec.x = self.position.x
+        self.player_dest_rec.y = self.position.y
 
     def handle_tile_collision(self, level, axis):
         player_rect = self.get_rect()
@@ -201,9 +204,8 @@ class Player():
             draw_texture_pro(
                 self.player_texture,
                 self.player_frame,
-                Rectangle(self.position.x , self.position.y,
-                           PLAYER_BOUNDING_BOX_WIDTH , PLAYER_BOUNDING_BOX_HEIGHT),
-                Vector2(0, 0), 0.0, WHITE,
+                self.player_dest_rec,
+                (0, 0), 0, WHITE,
             )
         if debug:
             draw_rectangle_lines(int(self.position.x + PLAYER_HITBOX_X_OFFSET),
@@ -211,7 +213,6 @@ class Player():
             draw_text(f"jump velo: {self.jump_vel}", int(self.position.x),
                        int(self.position.y-60), 20, RED)
             draw_text(f"anim: {self.state.cur}", int(self.position.x), int(self.position.y-30), 20, RED)
-
 
     def shutdown(self):
         unload_texture(self.player_texture)
