@@ -245,10 +245,12 @@ Finish core game flow, add more hazards, audio, pause/instruction screens, and i
 - Added spike hazards and damage feedback  
 - Randomized javelin throws  
 - Made blood bag spawns less predictable  
-- Added floating clouds and cloud files  
+- Added floating clouds and cloud files: Help from Claude
 - Added item gain notifications and level name popups  
 - Updated HUD design and adjusted HUD sizing  
-- Improved performance by unloading assets, garbage collecting javelins, and removing unnecessary rectangles from drawing  
+- Improved performance by unloading assets, garbage collecting javelins, and removing unnecessary rectangles from drawing
+- Added Wind
+- Added Wind movement: Help from Claude
 
 *Content Credit*:  
 - These screens were also generated from ChatGPT.
@@ -277,6 +279,8 @@ feat(clouds): floating clouds
 (fix) more performance fixes (taking rectangles out of drawing)  
 fix(hud): new hud  
 fix(hud): small size change  
-feat(popups and level name): notifcation when gaining items  
+feat(popups and level name): notifcation when gaining items 
+feat(wind): wind chance and bug fixes
+
 
 ---
