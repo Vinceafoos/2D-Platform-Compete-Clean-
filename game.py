@@ -279,6 +279,7 @@ class Game:
                         self.game_state = GameStates.WIN
                     else:
                         self.game_state = GameStates.LOSE
+                    self.loading_bar.width = 0
             case GameStates.WIN | GameStates.LOSE:
                 if is_key_pressed(KeyboardKey.KEY_SPACE):
                     self.reset()
