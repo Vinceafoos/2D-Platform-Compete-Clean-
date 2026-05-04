@@ -135,7 +135,7 @@ fix(charge): fix charge animation
 * Start adding transitions between levels
 * Start working on enemies 
 
-
+---
 
 ### Date: 4/29
 **Goal**  
@@ -152,3 +152,131 @@ feat(world textures): added temporary world textures
 
 **Next/TO DO :**  
 * Work on enemy sprite sheet and implementation
+
+---
+
+### Date: 4/30
+**Goal**  
+Make javelin sprite sheet and other features
+**Implementation**  
+*Technical Plan/Credit*:  
+- Add javelin sprites to wada sheet with photoshop
+- Implement sand that slows you down and lowers your jump
+- Improve debug mode to skip through levels
+
+*Content Credit*: 
+
+**Commit message**  
+(feat) can now skip thru levels in debug mode, levels now loaded in from a csv
+fix(javelin character sprite sheet)
+(feat) added sand that slows you down and shortens your jump
+feat(javelin player texture pack)
+
+**Next/TO DO :**  
+* Work on win conditions
+
+---
+
+### Date: 5/1
+**Goal**  
+Create a placeholder screen for winning
+**Implementation**  
+*Technical Plan/Credit*:  
+- Add a new game state for the end of the game, draw stats from the game on it at the end
+- Also change the weight mechanic so you need at least one weight to do a charge jump
+
+*Content Credit*: 
+
+**Commit message**  
+(feat) there is now a win screen with stats
+(feat) update levels & now need at least 1 weight to do a charge jump
+
+**Next/TO DO :**  
+* Implement our javelin enemy
+* Create the actual splash/win/lose screens
+
+---
+
+### Date: 5/2  
+**Goal**  
+Add presentation screens, level completion feedback, and improve gameplay polish  
+
+**Implementation**  
+*Technical Plan/Credit*:  
+- Added a splash screen for the game  
+- Added level completion screens with player stats  
+- Implemented functional javelin thrower behavior  
+- Adjusted charge jump heights  
+- Fixed the charge indicator so stars scale based on charge percentage  
+
+*Content Credit*:  
+- All screens for the game were generated using ChatGPT
+
+**Commit message**  
+(feat) splash screen added  
+feat(javelin thrower): functional javelin thrower & bug fixes  
+fix(world): bottom layer fix  
+fix(charge): adjust charge heights  
+(feat) now displays level completion screens with stats  
+feat(charge indicator): stars scale with % of charge done  
+refactor(thrower & javelin): add unload and restructure files  
+feat(In-game background): temporary in game background  
+
+**Next/TO DO :**  
+* Continue polishing game screens and transitions  
+* Add win/lose conditions  
+* Improve enemy behavior and level hazards  
+
+---
+
+### Date: 5/3  
+**Goal**  
+Finish core game flow, add more hazards, audio, pause/instruction screens, and improve performance  
+
+**Implementation**  
+*Technical Plan/Credit*:  
+- Added win, lose, calculating result, instructions, and replay screens  
+- Added level completion and game ending logic  
+- Added finish line to complete levels  
+- Added player death when health runs out, with options to restart the level or restart the game  
+- Added pause functionality using P  
+- Added game music  
+- Added pickup sounds for blood and weight items  
+- Added spike hazards and damage feedback  
+- Randomized javelin throws  
+- Made blood bag spawns less predictable  
+- Added floating clouds and cloud files  
+- Added item gain notifications and level name popups  
+- Updated HUD design and adjusted HUD sizing  
+- Improved performance by unloading assets, garbage collecting javelins, and removing unnecessary rectangles from drawing  
+
+*Content Credit*:  
+- These screens were also generated from ChatGPT.
+- Audio will be cited in our GDD 
+
+**Commit message**  
+(feat) win/lose/calculating result screens added, can replay after finishing  
+(feat) blood bags now don't always spawn  
+(fix) slight level changes  
+fix(jav throw): randomized throws  
+(feat) player now dies if runs out of health, can restart level or game  
+feat(spikes): added spike png  
+feat(spikes and damage notice): flicker to know when took damage  
+fix(sheets): changes in spritesheets  
+(feat) added a finish line  
+fix(map and javs): garbage collect javs & map updates  
+(feat) Can now pause using P  
+(fix) Pause now follows camera  
+(feat) Instructions screen added  
+feat(clouds): cloud files  
+(feat) game music added  
+(feat) pickup sounds for the blood and weight  
+(fix) improved some performance and unloaded everything  
+(fix) fixed bug where if you get to the end twice in one sitting the calculating screen doesnt work  
+feat(clouds): floating clouds  
+(fix) more performance fixes (taking rectangles out of drawing)  
+fix(hud): new hud  
+fix(hud): small size change  
+feat(popups and level name): notifcation when gaining items  
+
+---
