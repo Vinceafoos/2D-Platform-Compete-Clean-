@@ -46,8 +46,8 @@ Visually, Compete Clean uses a retro, pixel art style, forming a light and appro
 |---|---|---|
 | Movement | The player can traverse the level by moving left and right. | ![walking](md_assets/walking.png) |
 | Jump | By pressing space the player can jump over obstacles, or onto higher surfaces. | ![jumping](md_assets/jump.png) |
-| High Jump | By holding down the down key, the player can charge their jump to reach higher locations.  | ![charging](md_assets/charge_jump.png) |
-| Healing | If the player finds a medkit, they can use it to recover any lost health. | ![medkit](md_assets/medkit.png) |
+| Charge Jump | By holding down the down key, the player can charge their jump to reach higher locations.  | ![charging](md_assets/charge_jump.png) |
+| Wind | There is a 1/5 chance of a windy day each level, which effects player movement. | ![wind](md_assets/wind.png) |
 
 ### Secondary Mechanics
 | Mechanic| Description | Image |
