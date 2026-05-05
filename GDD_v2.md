@@ -60,6 +60,9 @@ Visually, Compete Clean uses a retro, pixel art style, forming a light and appro
 -   Weight pickup sound (weight_sound.mp3): RossBell (Freesound), "Tea Cup Clank." Pixabay, 2022, https://pixabay.com/sound-effects/film-special-effects-tea-cup-clank-80001/
 -   Heart image (heart.png): 6 Pixel Heart (PNG Transparent), https://www.onlygfx.com/6-pixel-heart-png-transparent/
 
+## Video
+- https://drive.google.com/file/d/1cQSUft-1aVCI4HAYa1eDMLtbW1C-iEll/view?usp=sharing
+
 ## Mechanics
 
 ### Primary Mechanics
