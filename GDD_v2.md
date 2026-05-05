@@ -16,10 +16,14 @@ For our art style we took some general inspiration from Kirby's Adventure which 
 ---
 
 ## Technical Details
--
--
--
--
+- Wind: 1/5 Chance for wind that randomly chooses direction and strength.
+  On a windy day, the time of the current interval is kept track of, and once it expires a new random choice is made. 18 wind particles are then added into an array that is drawn onto the screen according to the direction of the wind. 
+- Javelins: Javelin arc
+  Rather than a simple only x motion, mimic a real life javelin through using the math library and geometry. 
+- Camera Shake: Camera shakes on damage and player flashes to show immunity.
+  Account for the time it will be shaking, and offset the camera by a random amount in both the x and y direction. Keep a timer for how long should be invincible, and then stagger the drawing to mirror a flicker, commonly known as "i-frames."
+- Jump Charge: Scale total strength into the jumping animation
+  Calculate the duration for the animation based on the total time it will take to charge, so that the animation serves as an indicator of total jump and charge strength.
 
 ### Debug Mode
 - Our debug mode shows lots of useful features like the player hitbox, javelin hitbox, spike hitbox, and stats like jump velocity, animation frame, and our grounded boolean. The most useful feature though is when in debug mode, if you click "N" you will skip whichever level you are on and bring you to the next one. 
