@@ -25,8 +25,9 @@ For our art style we took some general inspiration from Kirby's Adventure which 
 - Our debug mode shows lots of useful features like the player hitbox, javelin hitbox, spike hitbox, and stats like jump velocity, animation frame, and our grounded boolean. The most useful feature though is when in debug mode, if you click "N" you will skip whichever level you are on and bring you to the next one. 
 ## Art Details
 - All of our textures for the player, enemy, items, and tiles were generated using Gemini, and then edited to fit what we wanted better. Here is an example prompt: 
+"i am making a 2d platfromer game that uses a WADA themed person that is moving throughout the game. Can you create a sprite sheet that follows the 8-bit theme of hte person in IDLE motion WALKING and JUMPING, and charging up for a higher jump. each should be 3-5 sprites for the animation"
 
-- All of our screens (splash, instructions, win/lose/in between) were generated using ChatGPT. We did this by giving Chat our wada_spritesheet.png so it could use our general theme, and then a prompt along these lines: "Generate a splash screen for a 2d platformer called Compete Clean. Attatched is a sprite sheet of our main character and some other sprites, feel free to gain reference from them. Write "Press Space to Play" on the screen. The game is about catching an athlete who is doping and bringing justice to the sport, so the background should be something like a track arena."
+- All of our screens (splash, instructions, win/lose/in between) were generated using ChatGPT. We did this by giving GPT5.5 our wada_spritesheet.png so it could use our general theme, and then a prompt along these lines: "Generate a splash screen for a 2d platformer called Compete Clean. Attatched is a sprite sheet of our main character and some other sprites, feel free to gain reference from them. Write "Press Space to Play" on the screen. The game is about catching an athlete who is doping and bringing justice to the sport, so the background should be something like a track arena."
 
 ## Concept
 
